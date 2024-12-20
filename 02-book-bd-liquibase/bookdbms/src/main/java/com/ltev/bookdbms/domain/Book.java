@@ -21,6 +21,7 @@ public class Book {
     private String title;
     private String isbn;
     private String publisher;
+    private Long authorId;
 
     public Book(String title) {
         this(title, null, null);

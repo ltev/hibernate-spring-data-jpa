@@ -16,5 +16,7 @@
     -->
 
     <include file="db/changelog/baseline-changelog.xml" />
+    <include file="db/changelog/add-author.xml" />
+    <include file="db/changelog/add-column-author-id-to-book.yaml" />
 
 </databaseChangeLog>
