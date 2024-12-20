@@ -12,7 +12,7 @@
 	<artifactId>bookdbms</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>bookdbms</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Project for Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -58,9 +58,21 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<scope>test</scope>									<!-- do not include h2 db in main project -->
 		</dependency>
 	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>h2</id>											<!-- new 'h2' maven profile -->
+			<dependencies>
+				<dependency>
+					<groupId>com.h2database</groupId>
+					<artifactId>h2</artifactId>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>
