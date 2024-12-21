@@ -1,11 +1,13 @@
 package com.ltev.bookdbms;
 
 import com.ltev.bookdbms.repository.BookRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,10 +28,11 @@ class BookdbmsApplicationTests {
 
 	@Order(1)
 	@Test
-	void testDataSource(@Autowired DataSource dataSource) throws SQLException {
+	void testDataSource(@Qualifier("dataSource") DataSource dataSource, @Autowired EntityManager entityManager) throws SQLException {
 		try (Connection connection = dataSource.getConnection()) {
 			assertThat(connection.getMetaData().getDatabaseProductName()).isEqualTo("MySQL");
 		}
+		assertThat(entityManager).isNotNull();
 	}
 
 	@Order(2)
