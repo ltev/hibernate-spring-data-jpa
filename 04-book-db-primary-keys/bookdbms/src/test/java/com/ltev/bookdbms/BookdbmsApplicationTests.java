@@ -47,7 +47,7 @@ class BookdbmsApplicationTests {
 
 			// insert new book
 
-			ps = connection.prepareStatement("insert into book (title) value (?)", Statement.RETURN_GENERATED_KEYS);
+			ps = connection.prepareStatement("insert into book (title) values (?)", Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, "Book title from tests");
 			ps.execute();
 			rs = ps.getGeneratedKeys();

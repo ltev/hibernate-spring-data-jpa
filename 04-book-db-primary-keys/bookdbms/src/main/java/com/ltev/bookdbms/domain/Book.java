@@ -15,7 +15,7 @@ import lombok.Setter;
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)     // AUTO - additional table 'book_seq'
+    @GeneratedValue(strategy = GenerationType.IDENTITY)     // AUTO - additional table 'book_seq'
     private Long id;
 
     private String title;
