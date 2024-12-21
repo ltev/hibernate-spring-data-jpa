@@ -4,9 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.sql.Types;
 import java.util.UUID;
@@ -18,8 +17,9 @@ import java.util.UUID;
 public class AuthorUuid {
 
     @Id
+    @UuidGenerator
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JdbcTypeCode(value = Types.VARCHAR)                // persist as aString
+    @JdbcTypeCode(value = Types.VARCHAR)                // persist as a String
     @Column(length = 36, columnDefinition = "varchar(36)", unique = true, updatable = false, nullable = false)
     private UUID id;
 
