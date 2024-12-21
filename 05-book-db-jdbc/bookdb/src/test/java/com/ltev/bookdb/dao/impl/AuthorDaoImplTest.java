@@ -20,29 +20,44 @@ class AuthorDaoImplTest {
     @Autowired
     private AuthorDao authorDao;
 
-    Author AUTHOR;
+    Author author;
 
     @BeforeEach
     void setUp() {
-        AUTHOR = new Author("Dave", "Willow");
+        author = new Author("Dave", "Willow");
     }
 
     @Test
     void save() {
-        Author saved = authorDao.save(AUTHOR);
+        Author saved = authorDao.save(author);
 
         assertThat(saved.getId()).isNotNull();
     }
 
     @Test
     void findById() {
-        authorDao.save(AUTHOR);
+        authorDao.save(author);
 
-        Author found = authorDao.findById(AUTHOR.getId()).get();
+        Author found = authorDao.findById(author.getId()).get();
 
         assertThat(found.getId()).isNotNull();
-        assertThat(found.getId()).isEqualTo(AUTHOR.getId());
-        assertTrue(equals(AUTHOR, found));
+        assertThat(found.getId()).isEqualTo(author.getId());
+        assertTrue(equals(author, found));
+    }
+
+    @Test
+    void update() {
+        authorDao.save(author);
+        author.setFirstName("Mike");
+        author.setLastName("Severic");
+
+        // update
+        authorDao.save(author);
+
+        Author found = authorDao.findById(author.getId()).get();
+        System.out.println(author);
+        System.out.println(found);
+        assertTrue(equals(author, found));
     }
 
     // == PRIVATE HELPER METHODS ==
