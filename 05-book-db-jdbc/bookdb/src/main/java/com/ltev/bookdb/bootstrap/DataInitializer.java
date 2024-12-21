@@ -1,7 +1,7 @@
-package com.ltev.bookdb.domain.bootstrap;
+package com.ltev.bookdb.bootstrap;
 
 import com.ltev.bookdb.domain.Book;
-import com.ltev.bookdb.domain.repository.BookRepository;
+import com.ltev.bookdb.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;

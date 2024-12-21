@@ -14,7 +14,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Author {
+public class Author implements LongIdEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

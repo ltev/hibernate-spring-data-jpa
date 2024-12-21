@@ -1,4 +1,4 @@
-package com.ltev.bookdb.domain.repository;
+package com.ltev.bookdb.repository;
 
 import com.ltev.bookdb.domain.Author;
 import org.springframework.data.jpa.repository.JpaRepository;

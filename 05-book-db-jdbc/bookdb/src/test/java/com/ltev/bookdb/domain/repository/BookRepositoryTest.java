@@ -1,7 +1,7 @@
 package com.ltev.bookdb.domain.repository;
 
-import com.ltev.bookdb.domain.Author;
 import com.ltev.bookdb.domain.Book;
+import com.ltev.bookdb.repository.BookRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
