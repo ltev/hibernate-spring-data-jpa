@@ -1,6 +1,6 @@
 package com.ltev.bookdbms.repository;
 
-import com.ltev.bookdbms.domain.composite.AuthorCompositeId;
+import com.ltev.bookdbms.domain.composite.AuthorEmbeddedId;
 import com.ltev.bookdbms.domain.composite.NameId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,27 +13,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("local")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace=AutoConfigureTestDatabase.Replace.NONE)
-class AuthorCompositeRepositoryTest {
+class AuthorEmbeddedRepositoryTest {
 
     @Autowired
-    private AuthorCompositeRepository authorCompositeRepository;
+    private AuthorEmbeddedRepository authorEmbeddedRepository;
 
     @Test
     void save() {
-        long startCount = authorCompositeRepository.count();
-        AuthorCompositeId author = new AuthorCompositeId("Eva", "Johnson", "US");
-        authorCompositeRepository.save(author);
+        long startCount = authorEmbeddedRepository.count();
+        AuthorEmbeddedId author = new AuthorEmbeddedId(new NameId("Eva", "Johnson"), "US");
+        authorEmbeddedRepository.save(author);
 
-        assertThat(authorCompositeRepository.count()).isEqualTo(startCount + 1);
+        assertThat(authorEmbeddedRepository.count()).isEqualTo(startCount + 1);
     }
 
     @Test
     void findById() {
-        AuthorCompositeId author = new AuthorCompositeId("Eva", "Johnson", "US");
-        authorCompositeRepository.save(author);
+        AuthorEmbeddedId author = new AuthorEmbeddedId(new NameId("Eva", "Johnson"), "US");
+        authorEmbeddedRepository.save(author);
 
         NameId id = new NameId("Eva", "Johnson");
 
-        assertThat(authorCompositeRepository.findById(id)).isNotEmpty();
+        assertThat(authorEmbeddedRepository.findById(id)).isNotEmpty();
     }
 }
