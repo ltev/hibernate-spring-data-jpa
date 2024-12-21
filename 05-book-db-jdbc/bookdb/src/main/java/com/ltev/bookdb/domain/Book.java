@@ -21,11 +21,11 @@ public class Book implements LongIdEntity {
     private Long id;
 
     private String title;
-    private String isbn;
     private String publisher;
+    private String isbn;
     private Long authorId;
 
-    public Book(String title, String isbn, String publisher) {
+    public Book(String title, String publisher, String isbn) {
         this.title = title;
         this.isbn = isbn;
         this.publisher = publisher;

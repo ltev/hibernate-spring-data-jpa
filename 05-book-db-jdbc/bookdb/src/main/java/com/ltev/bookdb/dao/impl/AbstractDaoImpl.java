@@ -5,18 +5,21 @@ import com.ltev.bookdb.domain.LongIdEntity;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractDaoImpl<T extends LongIdEntity> implements BaseDao<T, Long> {
 
+    private String COUNT_SQL = "select count(*) from <table>";
     private String SELECT_BY_ID_SQL = "select * from <table> where id = ?";
     private String DELETE_BY_ID_SQL = "delete from <table> where id = ?";
 
     protected final DataSource dataSource;
 
-
     public AbstractDaoImpl(DataSource dataSource, String tableName) {
         this.dataSource = dataSource;
+        COUNT_SQL = COUNT_SQL.replace("<table>", tableName);
         SELECT_BY_ID_SQL = SELECT_BY_ID_SQL.replace("<table>", tableName);
         DELETE_BY_ID_SQL = DELETE_BY_ID_SQL.replace("<table>", tableName);
     }
@@ -24,7 +27,7 @@ public abstract class AbstractDaoImpl<T extends LongIdEntity> implements BaseDao
     @Override
     public long count() {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement("select count(*) from author");
+             PreparedStatement ps = connection.prepareStatement(COUNT_SQL);
              ResultSet rs = ps.executeQuery()) {
             rs.next();
             return rs.getLong(1);
@@ -67,9 +70,6 @@ public abstract class AbstractDaoImpl<T extends LongIdEntity> implements BaseDao
             throw new RuntimeException(e);
         }
     }
-
-    abstract protected String getInsertSql();
-    abstract protected void setInsertParameters(T entity, PreparedStatement ps) throws SQLException;
 
     private T update(T entity) {
         try (Connection connection = dataSource.getConnection();
@@ -118,6 +118,39 @@ public abstract class AbstractDaoImpl<T extends LongIdEntity> implements BaseDao
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * General findBy... method
+     * @param sql
+     * @param params - List with parameters for sql placeholder: '?' for PreparedStatement
+     * @return
+     */
+    protected List<T> findBy(String sql, List<Object> params) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)){
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                List<T> entities = new ArrayList<>();
+
+                while (rs.next()) {
+                    T entity = getEntityFromRS(rs);
+                    entities.add(entity);
+                }
+
+                return entities;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    abstract protected String getInsertSql();
+
+    abstract protected void setInsertParameters(T entity, PreparedStatement ps) throws SQLException;
 
     abstract protected void updateRow(T entity, ResultSet rs) throws SQLException;
 

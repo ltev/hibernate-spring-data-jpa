@@ -5,18 +5,16 @@ import com.ltev.bookdb.domain.Author;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * TODO: change Statement to PreparedStatement
- */
 @Repository
 public class AuthorDaoImpl extends AbstractDaoImpl<Author> implements AuthorDao {
+
+    public static final String INSERT_SQL = "insert into author (first_name, last_name) values (?, ?)";
+    public static final String FIND_BY_FIRST_NAME_AND_LAST_NAME = "select * from author where first_name = ? and last_name = ?";
 
     public AuthorDaoImpl(DataSource dataSource) {
         super(dataSource, "author");
@@ -24,30 +22,12 @@ public class AuthorDaoImpl extends AbstractDaoImpl<Author> implements AuthorDao 
 
     @Override
     public List<Author> findByFirstNameAndLastName(String firstName, String lastName) {
-        try (Connection connection = dataSource.getConnection();
-            PreparedStatement ps = connection.prepareStatement("select * from author where first_name = ? and last_name = ?")){
-            ps.setString(1, firstName);
-            ps.setString(2, lastName);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                List<Author> authors = new ArrayList<>();
-
-                while (rs.next()) {
-                    Author author = getEntityFromRS(rs);
-                    authors.add(author);
-                }
-
-                return authors;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return findBy(FIND_BY_FIRST_NAME_AND_LAST_NAME, List.of(firstName, lastName));
     }
-
 
     @Override
     protected String getInsertSql() {
-        return "insert into author (first_name, last_name) values (?, ?)";
+        return INSERT_SQL;
     }
 
     @Override
@@ -60,18 +40,6 @@ public class AuthorDaoImpl extends AbstractDaoImpl<Author> implements AuthorDao 
     protected void updateRow(Author entity, ResultSet rs) throws SQLException {
         rs.updateString("first_name", entity.getFirstName());
         rs.updateString("last_name", entity.getLastName());
-    }
-
-    // == PRIVATE HELPER METHODS ==
-
-    private void closeResource(AutoCloseable resource) {
-        if (resource != null) {
-            try {
-                resource.close();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 
     @Override

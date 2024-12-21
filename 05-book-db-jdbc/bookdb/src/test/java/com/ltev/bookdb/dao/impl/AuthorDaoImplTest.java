@@ -66,10 +66,8 @@ class AuthorDaoImplTest {
 
         // update
         authorDao.save(author);
-
         Author found = authorDao.findById(author.getId()).get();
-        System.out.println(author);
-        System.out.println(found);
+
         assertTrue(equalsWithId(author, found));
     }
 
