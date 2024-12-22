@@ -2,32 +2,29 @@ package com.ltev.bookdb.dao_jdbc_template.impl;
 
 import com.ltev.bookdb.dao.BaseDao;
 import com.ltev.bookdb.domain.LongIdEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractDaoJdbcTemplateImpl<T extends LongIdEntity> implements BaseDao<T, Long> {
 
-    private String COUNT_SQL = "select count(*) from <table>";
-    private String SELECT_BY_ID_SQL = "select * from <table> where id = ?";
-    private String DELETE_BY_ID_SQL = "delete from <table> where id = ?";
+    private String COUNT_SQL = "select count(*) from :table";
+    private String SELECT_BY_ID_SQL = "select * from :table where id = ?";
+    private String DELETE_BY_ID_SQL = "delete from :table where id = ?";
 
-    protected final DataSource dataSource;
+    protected final JdbcTemplate jdbcTemplate;
 
-    public AbstractDaoJdbcTemplateImpl(DataSource dataSource, String tableName) {
-        this.dataSource = dataSource;
-        COUNT_SQL = COUNT_SQL.replace("<table>", tableName);
-        SELECT_BY_ID_SQL = SELECT_BY_ID_SQL.replace("<table>", tableName);
-        DELETE_BY_ID_SQL = DELETE_BY_ID_SQL.replace("<table>", tableName);
+    public AbstractDaoJdbcTemplateImpl(JdbcTemplate jdbcTemplate, String tableName) {
+        this.jdbcTemplate = jdbcTemplate;
+        COUNT_SQL = COUNT_SQL.replace(":table", tableName);
+        SELECT_BY_ID_SQL = SELECT_BY_ID_SQL.replace(":table", tableName);
+        DELETE_BY_ID_SQL = DELETE_BY_ID_SQL.replace(":table", tableName);
     }
 
     @Override
     public long count() {
-        return 0;
+        return jdbcTemplate.queryForObject(COUNT_SQL, Long.class);
     }
 
     /**
@@ -39,37 +36,49 @@ public abstract class AbstractDaoJdbcTemplateImpl<T extends LongIdEntity> implem
      */
     @Override
     public T save(T entity) {
+        if (entity.getId() != null) {
+            return update(entity);
+        }
+
+        int affected = jdbcTemplate.update(getInsertSql(), getInsertParameters(entity));
+        if (affected != 1) {
+            throw new RuntimeException("Update failed. Affected rows: " + affected);
+        }
+
+        Long generatedId = jdbcTemplate.queryForObject("select last_insert_id()", Long.class);
+        entity.setId(generatedId);
         return entity;
     }
 
     private T update(T entity) {
+        int affected = jdbcTemplate.update(getUpdateSql(), getUpdateParameters(entity));
+        if (affected != 1) {
+            throw new RuntimeException("Update failed. Affected rows: " + affected);
+        }
         return entity;
     }
 
     @Override
     public Optional<T> findById(Long id) {
-        return Optional.empty();
+        T entity = jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, getRowMapper(), id);
+        return Optional.ofNullable(entity);
     }
 
     @Override
     public void deleteById(Long id) {
-    }
-
-    /**
-     * General findBy... method
-     * @param sql
-     * @param params - List with parameters for sql placeholder: '?' for PreparedStatement
-     * @return
-     */
-    protected List<T> findBy(String sql, List<Object> params) {
-        return List.of();
+        int affected = jdbcTemplate.update(DELETE_BY_ID_SQL, id);
+        if (affected != 1) {
+            throw new RuntimeException("Delete failed. Affected rows: " + affected);
+        }
     }
 
     abstract protected String getInsertSql();
 
-    abstract protected void setInsertParameters(T entity, PreparedStatement ps) throws SQLException;
+    abstract protected Object[] getInsertParameters(T entity);
 
-    abstract protected void updateRow(T entity, ResultSet rs) throws SQLException;
+    abstract protected String getUpdateSql();
 
-    abstract protected T getEntityFromRS(ResultSet rs) throws SQLException;
+    abstract protected Object[] getUpdateParameters(T entity);
+
+    abstract protected RowMapper<T> getRowMapper();
 }

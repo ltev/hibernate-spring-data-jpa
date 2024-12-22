@@ -2,46 +2,59 @@ package com.ltev.bookdb.dao_jdbc_template.impl;
 
 import com.ltev.bookdb.dao.AuthorDao;
 import com.ltev.bookdb.domain.Author;
-import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
 public class AuthorDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Author> implements AuthorDao {
 
+    private static class AuthorRowMapper implements RowMapper<Author> {
+
+        private static final AuthorRowMapper instance = new AuthorRowMapper();
+
+        @Override
+        public Author mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Author author = new Author();
+            author.setId(rs.getLong(1));
+            author.setFirstName(rs.getString(2));
+            author.setLastName(rs.getString(3));
+            return author;
+        }
+    }
+
     public static final String INSERT_SQL = "insert into author (first_name, last_name) values (?, ?)";
+    public static final String UPDATE_SQL = "update author set first_name=?, last_name=? where id=?";
     public static final String FIND_BY_FIRST_NAME_AND_LAST_NAME = "select * from author where first_name = ? and last_name = ?";
 
-    public AuthorDaoJdbcTemplateImpl(DataSource dataSource) {
-        super(dataSource, "author");
+    public AuthorDaoJdbcTemplateImpl(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate, "author");
     }
 
     @Override
     public List<Author> findByFirstNameAndLastName(String firstName, String lastName) {
-        return findBy(FIND_BY_FIRST_NAME_AND_LAST_NAME, List.of(firstName, lastName));
+        return jdbcTemplate.query(FIND_BY_FIRST_NAME_AND_LAST_NAME, new AuthorRowMapper(), firstName, lastName);
     }
 
     @Override
     public int saveInBatch(List<Author> authors) {
-        StringBuilder sb = new StringBuilder("insert into author (first_name, last_name) values");
+        List<Object[]> args = new ArrayList<Object[]>();
         for (int i = 0; i < authors.size(); i++) {
-            sb.append("(?, ?),");
+            Author author = authors.get(i);
+            Object[] arg = new Object[2];
+            arg[0] = author.getFirstName();
+            arg[1] = author.getLastName();
+            args.add(arg);
         }
-        String sql = sb.deleteCharAt(sb.length() - 1).toString();
-
-        try (Connection connection = dataSource.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql)) {
-            setInsertInBatchParameters(authors, ps);
-            return ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        int[] arrAffected = jdbcTemplate.batchUpdate(INSERT_SQL, args);
+        return Arrays.stream(arrAffected).sum();
     }
 
     @Override
@@ -50,31 +63,22 @@ public class AuthorDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Autho
     }
 
     @Override
-    protected void setInsertParameters(Author entity, PreparedStatement ps) throws SQLException {
-        ps.setString(1, entity.getFirstName());
-        ps.setString(2, entity.getLastName());
-    }
-
-    protected void setInsertInBatchParameters(List<Author> entities, PreparedStatement ps) throws SQLException {
-        int i = 1;
-        for (Author entity : entities) {
-            ps.setString(i++, entity.getFirstName());
-            ps.setString(i++, entity.getLastName());
-        }
+    protected Object[] getInsertParameters(Author author) {
+        return new Object[] {author.getFirstName(), author.getLastName()};
     }
 
     @Override
-    protected void updateRow(Author entity, ResultSet rs) throws SQLException {
-        rs.updateString("first_name", entity.getFirstName());
-        rs.updateString("last_name", entity.getLastName());
+    protected String getUpdateSql() {
+        return UPDATE_SQL;
     }
 
     @Override
-    protected Author getEntityFromRS(ResultSet rs) throws SQLException {
-        Author author = new Author();
-        author.setId(rs.getLong(1));
-        author.setFirstName(rs.getString(2));
-        author.setLastName(rs.getString(3));
-        return author;
+    protected Object[] getUpdateParameters(Author entity) {
+        return new Object[] {entity.getFirstName(), entity.getLastName(), entity.getId()};
+    }
+
+    @Override
+    protected RowMapper<Author> getRowMapper() {
+        return AuthorRowMapper.instance;
     }
 }
