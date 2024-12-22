@@ -48,6 +48,15 @@ class AuthorDaoImplTest {
     }
 
     @Test
+    void saveInBatch() {
+        long count = authorDao.count();
+        int rowsAffected = authorDao.saveInBatch(List.of(new Author(), author, new Author()));
+
+        assertThat(rowsAffected).isEqualTo(3);
+        assertThat(authorDao.count()).isEqualTo(count + 3);
+    }
+
+    @Test
     void findById() {
         authorDao.save(author);
 

@@ -5,6 +5,7 @@ import com.ltev.bookdb.domain.Author;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,6 +27,23 @@ public class AuthorDaoImpl extends AbstractDaoImpl<Author> implements AuthorDao 
     }
 
     @Override
+    public int saveInBatch(List<Author> authors) {
+        StringBuilder sb = new StringBuilder("insert into author (first_name, last_name) values");
+        for (int i = 0; i < authors.size(); i++) {
+            sb.append(" (?, ?),");
+        }
+        String sql = sb.substring(0, sb.length() - 1);
+
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql)) {
+            setInsertInBatchParameters(authors, ps);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     protected String getInsertSql() {
         return INSERT_SQL;
     }
@@ -34,6 +52,14 @@ public class AuthorDaoImpl extends AbstractDaoImpl<Author> implements AuthorDao 
     protected void setInsertParameters(Author entity, PreparedStatement ps) throws SQLException {
         ps.setString(1, entity.getFirstName());
         ps.setString(2, entity.getLastName());
+    }
+
+    protected void setInsertInBatchParameters(List<Author> entities, PreparedStatement ps) throws SQLException {
+        int i = 1;
+        for (Author entity : entities) {
+            ps.setString(i++, entity.getFirstName());
+            ps.setString(i++, entity.getLastName());
+        }
     }
 
     @Override

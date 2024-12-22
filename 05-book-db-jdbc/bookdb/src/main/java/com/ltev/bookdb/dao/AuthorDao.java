@@ -7,4 +7,6 @@ import java.util.List;
 public interface AuthorDao extends BaseDao<Author, Long> {
 
     List<Author> findByFirstNameAndLastName(String firstName, String lastName);
+
+    int saveInBatch(List<Author> authors);
 }
