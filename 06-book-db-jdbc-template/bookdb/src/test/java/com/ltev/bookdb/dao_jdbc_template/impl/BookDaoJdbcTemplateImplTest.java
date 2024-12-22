@@ -93,8 +93,10 @@ class BookDaoJdbcTemplateImplTest {
 
     @Test
     void findByTitle() {
-        // Save two times Books
-        String TITLE = "This one";
+        String TITLE = "This one 2";
+        long countBefore = bookDao.findByTitle(TITLE).size();
+
+        // Save twice
         bookDao.save(new Book(TITLE, "This publisher", "123456789"));
         bookDao.save(new Book("x", "y", "z"));
         bookDao.save(new Book("x", "y", "z"));
@@ -103,7 +105,7 @@ class BookDaoJdbcTemplateImplTest {
         Book thisOne = new Book(TITLE, "This publisher", "123456789");
         List<Book> list = bookDao.findByTitle(thisOne.getTitle());
 
-        assertThat(list.size()).isEqualTo(2);
+        assertThat(list.size()).isEqualTo(countBefore + 2);
         assertTrue(equalsNoId(thisOne, list.get(0)));
         assertTrue(equalsNoId(thisOne, list.get(1)));
     }
@@ -112,8 +114,10 @@ class BookDaoJdbcTemplateImplTest {
     void findByTitle_withAuthor() {
         authorDao.save(author);
 
-        // Save two times Books
         String TITLE = "This one 2";
+        long countBefore = bookDao.findByTitle(TITLE).size();
+
+        // Save twice
         bookDao.save(new Book(TITLE, "This publisher", "123456789", author));
         bookDao.save(new Book("x", "y", "z"));
         bookDao.save(new Book("x", "y", "z"));
@@ -122,11 +126,11 @@ class BookDaoJdbcTemplateImplTest {
         Book thisOne = new Book(TITLE, "This publisher", "123456789");
         List<Book> list = bookDao.findByTitle(thisOne.getTitle());
 
-        assertThat(list.size()).isEqualTo(2);
+        assertThat(list.size()).isEqualTo(countBefore + 2);
         assertTrue(equalsNoId(thisOne, list.get(0)));
         assertTrue(equalsNoId(thisOne, list.get(1)));
-        assertTrue(equalsWithId(author, list.get(0).getAuthor()));
-        assertTrue(equalsWithId(author, list.get(1).getAuthor()));
+        assertTrue(equalsWithId(author, list.getLast().getAuthor()));
+        assertTrue(equalsWithId(author, list.get(list.size() - 2).getAuthor()));
     }
 
     @Test

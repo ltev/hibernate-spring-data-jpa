@@ -2,6 +2,7 @@ package com.ltev.bookdb.dao_jdbc_template.impl;
 
 import com.ltev.bookdb.dao.BaseDao;
 import com.ltev.bookdb.domain.LongIdEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -50,7 +51,7 @@ public abstract class AbstractDaoJdbcTemplateImpl<T extends LongIdEntity> implem
         return entity;
     }
 
-    private T update(T entity) {
+    protected T update(T entity) {
         int affected = jdbcTemplate.update(getUpdateSql(), getUpdateParameters(entity));
         if (affected != 1) {
             throw new RuntimeException("Update failed. Affected rows: " + affected);
@@ -60,8 +61,12 @@ public abstract class AbstractDaoJdbcTemplateImpl<T extends LongIdEntity> implem
 
     @Override
     public Optional<T> findById(Long id) {
-        T entity = jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, getRowMapper(), id);
-        return Optional.ofNullable(entity);
+        try {
+            T entity = jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, getRowMapper(), id);
+            return Optional.ofNullable(entity);
+        } catch (EmptyResultDataAccessException ex) {
+            return Optional.empty();
+        }
     }
 
     @Override

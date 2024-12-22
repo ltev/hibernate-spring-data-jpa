@@ -81,16 +81,18 @@ class AuthorDaoJdbcTemplateImplTest {
 
     @Test
     void findByFirstNameAndLastName() {
+        Author erikMcGrab = new Author("Erik", "McGrab");
+        long countBefore = authorDao.findByFirstNameAndLastName(erikMcGrab.getFirstName(), erikMcGrab.getLastName()).size();
+
         // Save two times Author with name: Erik McGrab
         authorDao.save(new Author("Erik", "McGrab"));
         authorDao.save(new Author("Erik", "Willow"));
         authorDao.save(new Author("Erik", "McGrab"));
         authorDao.save(new Author("Ela", "McGrab"));
 
-        Author erikMcGrab = new Author("Erik", "McGrab");
         List<Author> list = authorDao.findByFirstNameAndLastName(erikMcGrab.getFirstName(), erikMcGrab.getLastName());
 
-        assertThat(list.size()).isEqualTo(2);
+        assertThat(list.size()).isEqualTo(countBefore + 2);
         assertTrue(equalsNoId(erikMcGrab, list.get(0)));
         assertTrue(equalsNoId(erikMcGrab, list.get(1)));
     }
@@ -101,7 +103,9 @@ class AuthorDaoJdbcTemplateImplTest {
         long countAfterSave = authorDao.count();
 
         authorDao.deleteById(author.getId());
+
         assertThat(authorDao.count()).isEqualTo(countAfterSave - 1);
+        assertThat(authorDao.findById(author.getId())).isEmpty();
     }
 
     // == PRIVATE HELPER METHODS ==

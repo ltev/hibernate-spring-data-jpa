@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.util.List;
 
@@ -22,6 +24,8 @@ class AuthorDaoImplTest {
     private AuthorDaoImpl authorDao;
 
     Author author;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
@@ -81,16 +85,18 @@ class AuthorDaoImplTest {
 
     @Test
     void findByFirstNameAndLastName() {
+        Author erikMcGrab = new Author("Erik", "McGrab");
+        long countBefore = authorDao.findByFirstNameAndLastName(erikMcGrab.getFirstName(), erikMcGrab.getLastName()).size();
+
         // Save two times Author with name: Erik McGrab
         authorDao.save(new Author("Erik", "McGrab"));
         authorDao.save(new Author("Erik", "Willow"));
         authorDao.save(new Author("Erik", "McGrab"));
         authorDao.save(new Author("Ela", "McGrab"));
 
-        Author erikMcGrab = new Author("Erik", "McGrab");
         List<Author> list = authorDao.findByFirstNameAndLastName(erikMcGrab.getFirstName(), erikMcGrab.getLastName());
 
-        assertThat(list.size()).isEqualTo(2);
+        assertThat(list.size()).isEqualTo(countBefore + 2);
         assertTrue(equalsNoId(erikMcGrab, list.get(0)));
         assertTrue(equalsNoId(erikMcGrab, list.get(1)));
     }
@@ -101,7 +107,9 @@ class AuthorDaoImplTest {
         long countAfterSave = authorDao.count();
 
         authorDao.deleteById(author.getId());
+
         assertThat(authorDao.count()).isEqualTo(countAfterSave - 1);
+        assertThat(authorDao.findById(author.getId())).isEmpty();
     }
 
     // == PRIVATE HELPER METHODS ==
