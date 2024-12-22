@@ -1,6 +1,7 @@
 package com.ltev.bookdb.dao.impl;
 
 import com.ltev.bookdb.domain.Author;
+import com.ltev.bookdb.domain.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,20 +9,24 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.util.List;
 
+import static com.ltev.bookdb.TestSupport.equalsNoId;
+import static com.ltev.bookdb.TestSupport.equalsWithId;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(AuthorDaoImpl.class)
+@Import({AuthorDaoImpl.class, BookDaoImpl.class})
 class AuthorDaoImplTest {
 
     @Autowired
     private AuthorDaoImpl authorDao;
+
+    @Autowired
+    private BookDaoImpl bookDao;
 
     Author author;
     @Autowired
@@ -112,15 +117,34 @@ class AuthorDaoImplTest {
         assertThat(authorDao.findById(author.getId())).isEmpty();
     }
 
-    // == PRIVATE HELPER METHODS ==
 
-    private boolean equalsWithId(Author a1, Author a2) {
-        return  a1.getId().equals(a2.getId())
-                && equalsNoId(a1, a2);
+    @Test
+    void findById_joinFetchBooks_size0() {
+        authorDao.save(author);
+
+        Author found = authorDao.findByIdJoinFetchBooks(author.getId()).get();
+
+        assertTrue(equalsWithId(author, found));
+        assertThat(found.getBooks().size()).isEqualTo(0);
     }
 
-    private boolean equalsNoId(Author a1, Author a2) {
-        return  a1.getFirstName().equals(a2.getFirstName())
-                && a1.getLastName().equals(a2.getLastName());
+    @Test
+    void findById_joinFetchBooks_size2() {
+        authorDao.save(author);
+
+        var book1 = new Book("How to do", "publisher 1", "2342312");
+        var book2 = new Book("How not to do ", "publisher 2", "2342324");
+        book1.setAuthor(author);
+        book2.setAuthor(author);
+
+        bookDao.save(book1);
+        bookDao.save(book2);
+
+        Author found = authorDao.findByIdJoinFetchBooks(author.getId()).get();
+
+        assertTrue(equalsWithId(author, found));
+        assertThat(found.getBooks().size()).isEqualTo(2);
+        assertTrue(equalsWithId(book1, found.getBooks().get(0)));
+        assertTrue(equalsWithId(book2, found.getBooks().get(1)));
     }
 }

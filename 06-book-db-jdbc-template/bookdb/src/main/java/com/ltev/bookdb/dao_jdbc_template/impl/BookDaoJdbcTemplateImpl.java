@@ -4,6 +4,7 @@ import com.ltev.bookdb.dao.AuthorDao;
 import com.ltev.bookdb.dao.BookDao;
 import com.ltev.bookdb.domain.Author;
 import com.ltev.bookdb.domain.Book;
+import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -18,7 +19,10 @@ import java.util.List;
 @Repository
 public class BookDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Book> implements BookDao {
 
-    private class BookRowMapper implements RowMapper<Book> {
+    @AllArgsConstructor
+    static class BookRowMapper implements RowMapper<Book> {
+
+        private AuthorDao authorDao;
 
         @Override
         public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -43,11 +47,12 @@ public class BookDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Book> i
     public static final String FIND_BY_TITLE_SQL = "select * from book where title = ?";
 
     private final AuthorDao authorDao;
-    private final BookRowMapper bookRowMapper = new BookRowMapper();
+    private final BookRowMapper bookRowMapper;
 
     public BookDaoJdbcTemplateImpl(JdbcTemplate jdbcTemplate, AuthorDaoJdbcTemplateImpl authorDao) {
         super(jdbcTemplate, "book");
         this.authorDao = authorDao;
+        this.bookRowMapper = new BookRowMapper(authorDao);
     }
 
     @Override
