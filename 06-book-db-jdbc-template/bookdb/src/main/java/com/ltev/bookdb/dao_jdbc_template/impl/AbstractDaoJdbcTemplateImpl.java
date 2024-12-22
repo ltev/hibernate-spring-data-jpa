@@ -15,9 +15,12 @@ public abstract class AbstractDaoJdbcTemplateImpl<T extends LongIdEntity> implem
     private String DELETE_BY_ID_SQL = "delete from :table where id = ?";
 
     protected final JdbcTemplate jdbcTemplate;
+    protected final RowMapper<T> rowMapper;
 
-    public AbstractDaoJdbcTemplateImpl(JdbcTemplate jdbcTemplate, String tableName) {
+    public AbstractDaoJdbcTemplateImpl(JdbcTemplate jdbcTemplate, String tableName, RowMapper<T> rowMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.rowMapper = rowMapper;
+
         COUNT_SQL = COUNT_SQL.replace(":table", tableName);
         SELECT_BY_ID_SQL = SELECT_BY_ID_SQL.replace(":table", tableName);
         DELETE_BY_ID_SQL = DELETE_BY_ID_SQL.replace(":table", tableName);
@@ -62,7 +65,7 @@ public abstract class AbstractDaoJdbcTemplateImpl<T extends LongIdEntity> implem
     @Override
     public Optional<T> findById(Long id) {
         try {
-            T entity = jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, getRowMapper(), id);
+            T entity = jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, rowMapper, id);
             return Optional.ofNullable(entity);
         } catch (EmptyResultDataAccessException ex) {
             return Optional.empty();
@@ -84,6 +87,4 @@ public abstract class AbstractDaoJdbcTemplateImpl<T extends LongIdEntity> implem
     abstract protected String getUpdateSql();
 
     abstract protected Object[] getUpdateParameters(T entity);
-
-    abstract protected RowMapper<T> getRowMapper();
 }

@@ -3,6 +3,7 @@ package com.ltev.bookdb.dao_jdbc_template.impl;
 import com.ltev.bookdb.dao.AuthorDao;
 import com.ltev.bookdb.domain.Author;
 import com.ltev.bookdb.domain.Book;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -14,12 +15,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+@Primary
 @Repository
 public class AuthorDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Author> implements AuthorDao {
 
     private static class AuthorRowMapper implements RowMapper<Author> {
-
-        private static final AuthorRowMapper instance = new AuthorRowMapper();
 
         @Override
         public Author mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -33,32 +33,34 @@ public class AuthorDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Autho
 
     private static class AuthorExtractor implements ResultSetExtractor<Author> {
 
-        private static final AuthorExtractor instance = new AuthorExtractor();
         private static final int BOOK_START_COLUMN_IDX = 4;
+
+        private final AuthorRowMapper rowMapper = new AuthorRowMapper();
 
         @Override
         public Author extractData(ResultSet rs) throws SQLException, DataAccessException {
-            Author author = null;
             List<Book> books = new ArrayList<>();
 
-            while (rs.next()) {
-                if (author == null) {
-                    author = AuthorRowMapper.instance.mapRow(rs, -1);
-                }
-                if (rs.getObject(BOOK_START_COLUMN_IDX) == null) {
-                    break;
-                }
-                books.add(mapBook(rs, author, BOOK_START_COLUMN_IDX));
+            // at least one row should be available
+            rs.next();
+
+            // first row
+            Author author = rowMapper.mapRow(rs, -1);;
+            if (rs.getObject(BOOK_START_COLUMN_IDX) != null) {
+                books.add(mapBook(rs, author));
             }
 
-            if (author != null) {
-                author.setBooks(books);
+            // next rows
+            while (rs.next()) {
+                books.add(mapBook(rs, author));
             }
+            author.setBooks(books);
+
             return author;
         }
 
-        private Book mapBook(ResultSet rs, Author author, int startColumn) throws SQLException {
-            int columnIdx = startColumn;
+        private Book mapBook(ResultSet rs, Author author) throws SQLException {
+            int columnIdx = BOOK_START_COLUMN_IDX;
 
             Book book = new Book();
             book.setId(rs.getLong(columnIdx++));
@@ -80,14 +82,18 @@ public class AuthorDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Autho
                 LEFT OUTER JOIN book b ON b.author_id = a.id
                 WHERE a.id = ?""";
 
+    private final BookDaoJdbcTemplateImpl.BookRowMapper bookRowMapper;
+    private final AuthorExtractor authorExtractor;
 
     public AuthorDaoJdbcTemplateImpl(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate, "author");
+        super(jdbcTemplate, "author", new AuthorRowMapper());
+        bookRowMapper = new BookDaoJdbcTemplateImpl.BookRowMapper(this);;
+        authorExtractor = new AuthorExtractor();
     }
 
     @Override
     public List<Author> findByFirstNameAndLastName(String firstName, String lastName) {
-        return jdbcTemplate.query(FIND_BY_FIRST_NAME_AND_LAST_NAME, getRowMapper(), firstName, lastName);
+        return jdbcTemplate.query(FIND_BY_FIRST_NAME_AND_LAST_NAME, rowMapper, firstName, lastName);
     }
 
     /**
@@ -134,13 +140,12 @@ public class AuthorDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Autho
 
     @Override
     public List<Book> findBooks(Long authorId) {
-        return jdbcTemplate.query("select * from book where author_id = ?",
-                new BookDaoJdbcTemplateImpl.BookRowMapper(this), authorId);
+        return jdbcTemplate.query("select * from book where author_id = ?", bookRowMapper, authorId);
     }
 
     @Override
     public Optional<Author> findByIdJoinFetchBooks(Long authorId) {
-        return Optional.ofNullable(jdbcTemplate.query(FIND_BY_ID_JOIN_FETCH_BOOKS_SQL, AuthorExtractor.instance, authorId));
+        return Optional.ofNullable(jdbcTemplate.query(FIND_BY_ID_JOIN_FETCH_BOOKS_SQL, authorExtractor, authorId));
     }
 
     @Override
@@ -161,10 +166,5 @@ public class AuthorDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Autho
     @Override
     protected Object[] getUpdateParameters(Author entity) {
         return new Object[] {entity.getFirstName(), entity.getLastName(), entity.getId()};
-    }
-
-    @Override
-    protected RowMapper<Author> getRowMapper() {
-        return AuthorRowMapper.instance;
     }
 }
