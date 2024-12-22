@@ -1,4 +1,4 @@
-package com.ltev.bookdb.dao.impl;
+package com.ltev.bookdb.dao_jdbc_template.impl;
 
 import com.ltev.bookdb.domain.Author;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,11 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(AuthorDaoImpl.class)
-class AuthorDaoImplTest {
+@Import(AuthorDaoJdbcTemplateImpl.class)
+class AuthorDaoJdbcTemplateImplTest {
 
     @Autowired
-    private AuthorDaoImpl authorDao;
+    private AuthorDaoJdbcTemplateImpl authorDao;
 
     Author author;
 
