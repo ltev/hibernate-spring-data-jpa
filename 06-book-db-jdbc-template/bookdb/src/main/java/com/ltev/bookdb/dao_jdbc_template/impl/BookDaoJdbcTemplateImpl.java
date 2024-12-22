@@ -2,7 +2,10 @@ package com.ltev.bookdb.dao_jdbc_template.impl;
 
 import com.ltev.bookdb.dao.AuthorDao;
 import com.ltev.bookdb.dao.BookDao;
+import com.ltev.bookdb.domain.Author;
 import com.ltev.bookdb.domain.Book;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -15,19 +18,41 @@ import java.util.List;
 @Repository
 public class BookDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Book> implements BookDao {
 
+    private class BookRowMapper implements RowMapper<Book> {
+
+        @Override
+        public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Book book = new Book();
+            book.setId(rs.getLong(1));
+            book.setTitle(rs.getString(2));
+            book.setPublisher(rs.getString(3));
+            book.setIsbn(rs.getString(4));
+
+            long authorId = rs.getLong(5);
+            if (authorId != 0) {
+                book.setAuthor(authorDao.findById(authorId).orElseThrow(
+                        () -> new RuntimeException("Author not found for id " + authorId))
+                );
+            }
+            return book;
+        }
+    }
+
     public static final String INSERT_SQL = "insert into book (title, publisher, isbn, author_id) values (?, ?, ?, ?)";
+    public static final String UPDATE_SQL = "update book set title=?, publisher=?, isbn=?, author_id=? where id=?";
     public static final String FIND_BY_TITLE_SQL = "select * from book where title = ?";
 
     private final AuthorDao authorDao;
+    private final BookRowMapper bookRowMapper = new BookRowMapper();
 
-    public BookDaoJdbcTemplateImpl(DataSource dataSource, AuthorDaoJdbcTemplateImpl authorDao) {
-        super(dataSource, "book");
+    public BookDaoJdbcTemplateImpl(JdbcTemplate jdbcTemplate, AuthorDaoJdbcTemplateImpl authorDao) {
+        super(jdbcTemplate, "book");
         this.authorDao = authorDao;
     }
 
     @Override
     public List<Book> findByTitle(String title) {
-        return null;
+        return jdbcTemplate.query(FIND_BY_TITLE_SQL, getRowMapper(), title);
     }
 
     @Override
@@ -36,39 +61,24 @@ public class BookDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Book> i
     }
 
     @Override
-    protected void setInsertParameters(Book entity, PreparedStatement ps) throws SQLException {
-        ps.setString(1, entity.getTitle());
-        ps.setString(2, entity.getPublisher());
-        ps.setString(3, entity.getIsbn());
-
-        if (entity.getAuthor() != null) {
-            ps.setLong(4, entity.getAuthor().getId());
-        } else {
-            ps.setNull(4, Types.BIGINT);
-        }
+    protected Object[] getInsertParameters(Book entity) {
+        Long authorId = entity.getAuthor() != null ? entity.getAuthor().getId() : null;
+        return new Object[] {entity.getTitle(), entity.getPublisher(), entity.getIsbn(), authorId};
     }
 
     @Override
-    protected void updateRow(Book entity, ResultSet rs) throws SQLException {
-        rs.updateString("title", entity.getTitle());
-        rs.updateString("publisher", entity.getPublisher());
-        rs.updateString("isbn", entity.getIsbn());
+    protected String getUpdateSql() {
+        return UPDATE_SQL;
     }
 
     @Override
-    protected Book getEntityFromRS(ResultSet rs) throws SQLException {
-        Book book = new Book();
-        book.setId(rs.getLong(1));
-        book.setTitle(rs.getString(2));
-        book.setPublisher(rs.getString(3));
-        book.setIsbn(rs.getString(4));
+    protected Object[] getUpdateParameters(Book entity) {
+        Long authorId = entity.getAuthor() != null ? entity.getAuthor().getId() : null;
+        return new Object[] {entity.getTitle(), entity.getPublisher(), entity.getIsbn(), authorId, entity.getId()};
+    }
 
-        long authorId = rs.getLong(5);
-        if (authorId != 0) {
-            book.setAuthor(authorDao.findById(authorId).orElseThrow(
-                    () -> new RuntimeException("Author not found for id " + authorId))
-            );
-        }
-        return book;
+    @Override
+    protected RowMapper<Book> getRowMapper() {
+        return bookRowMapper;
     }
 }

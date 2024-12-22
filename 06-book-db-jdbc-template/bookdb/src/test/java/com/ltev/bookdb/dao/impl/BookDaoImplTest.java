@@ -141,7 +141,7 @@ class BookDaoImplTest {
     @Test
     void deleteById_withAuthor() {
         authorDao.save(author);
-        long authorCountAfterSave = bookDao.count();
+        long authorCountAfterSave = authorDao.count();
 
         book.setAuthor(author);
         bookDao.save(book);

@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,12 +39,12 @@ public class AuthorDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Autho
 
     @Override
     public List<Author> findByFirstNameAndLastName(String firstName, String lastName) {
-        return jdbcTemplate.query(FIND_BY_FIRST_NAME_AND_LAST_NAME, new AuthorRowMapper(), firstName, lastName);
+        return jdbcTemplate.query(FIND_BY_FIRST_NAME_AND_LAST_NAME, getRowMapper(), firstName, lastName);
     }
 
     @Override
     public int saveInBatch(List<Author> authors) {
-        List<Object[]> args = new ArrayList<Object[]>();
+        List<Object[]> args = new ArrayList<>();
         for (int i = 0; i < authors.size(); i++) {
             Author author = authors.get(i);
             Object[] arg = new Object[2];
