@@ -1,9 +1,6 @@
 package com.ltev.bookdb.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,11 +20,18 @@ public class Book implements LongIdEntity {
     private String title;
     private String publisher;
     private String isbn;
-    private Long authorId;
+
+    @Transient
+    private Author author;
 
     public Book(String title, String publisher, String isbn) {
+        this(title, publisher, isbn, null);
+    }
+
+    public Book(String title, String publisher, String isbn, Author author) {
         this.title = title;
-        this.isbn = isbn;
         this.publisher = publisher;
+        this.isbn = isbn;
+        this.author = author;
     }
 }

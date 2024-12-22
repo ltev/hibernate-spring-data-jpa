@@ -7,9 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.dao.DataIntegrityViolationException;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -30,14 +29,5 @@ class BookRepositoryTest {
         bookRepository.save(BOOK);
 
         assertThat(BOOK.getId()).isNotNull();
-    }
-
-    @Test
-    void authorIdRelationship() {
-        Long nonExistingAuthorId = 1L;
-        BOOK.setAuthorId(nonExistingAuthorId);
-
-        assertThatExceptionOfType(DataIntegrityViolationException.class).isThrownBy(
-                () -> bookRepository.save(BOOK));
     }
 }

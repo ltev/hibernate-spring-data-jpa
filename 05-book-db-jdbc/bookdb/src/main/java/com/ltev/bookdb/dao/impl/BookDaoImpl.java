@@ -1,5 +1,6 @@
 package com.ltev.bookdb.dao.impl;
 
+import com.ltev.bookdb.dao.AuthorDao;
 import com.ltev.bookdb.dao.BookDao;
 import com.ltev.bookdb.domain.Book;
 import org.springframework.stereotype.Repository;
@@ -8,16 +9,20 @@ import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
 @Repository
 public class BookDaoImpl extends AbstractDaoImpl<Book> implements BookDao {
 
-    public static final String INSERT_SQL = "insert into book (title, publisher, isbn) values (?, ?, ?)";
+    public static final String INSERT_SQL = "insert into book (title, publisher, isbn, author_id) values (?, ?, ?, ?)";
     public static final String FIND_BY_TITLE_SQL = "select * from book where title = ?";
 
-    public BookDaoImpl(DataSource dataSource) {
+    private final AuthorDao authorDao;
+
+    public BookDaoImpl(DataSource dataSource, AuthorDao authorDao) {
         super(dataSource, "book");
+        this.authorDao = authorDao;
     }
 
     @Override
@@ -35,6 +40,12 @@ public class BookDaoImpl extends AbstractDaoImpl<Book> implements BookDao {
         ps.setString(1, entity.getTitle());
         ps.setString(2, entity.getPublisher());
         ps.setString(3, entity.getIsbn());
+
+        if (entity.getAuthor() != null) {
+            ps.setLong(4, entity.getAuthor().getId());
+        } else {
+            ps.setNull(4, Types.BIGINT);
+        }
     }
 
     @Override
@@ -51,6 +62,13 @@ public class BookDaoImpl extends AbstractDaoImpl<Book> implements BookDao {
         book.setTitle(rs.getString(2));
         book.setPublisher(rs.getString(3));
         book.setIsbn(rs.getString(4));
+
+        long authorId = rs.getLong(5);
+        if (authorId != 0) {
+            book.setAuthor(authorDao.findById(authorId).orElseThrow(
+                    () -> new RuntimeException("Author not found for id " + authorId))
+            );
+        }
         return book;
     }
 }
