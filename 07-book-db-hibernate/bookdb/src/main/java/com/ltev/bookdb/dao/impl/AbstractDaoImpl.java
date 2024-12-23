@@ -1,17 +1,10 @@
 package com.ltev.bookdb.dao.impl;
 
 import com.ltev.bookdb.dao.BaseDao;
-import com.ltev.bookdb.domain.Author;
 import com.ltev.bookdb.domain.LongIdEntity;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.AllArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -37,7 +30,7 @@ public abstract class AbstractDaoImpl<T extends LongIdEntity> implements BaseDao
         var em = emf.createEntityManager();
         em.getTransaction().begin();
         em.persist(t);
-        em.getTransaction().commit();
+        em.getTransaction().commit();                           // Commits changes into the db
         em.close();
         return t;
     }
