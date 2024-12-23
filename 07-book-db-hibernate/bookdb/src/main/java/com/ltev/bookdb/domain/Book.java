@@ -21,7 +21,7 @@ public class Book implements LongIdEntity {
     private String publisher;
     private String isbn;
 
-    @Transient
+    @ManyToOne              // EAGER
     private Author author;
 
     public Book(String title, String publisher, String isbn) {

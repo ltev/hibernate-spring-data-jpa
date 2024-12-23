@@ -1,22 +1,36 @@
 package com.ltev.bookdb.dao.impl;
 
-import com.ltev.bookdb.dao.AuthorDao;
 import com.ltev.bookdb.dao.BookDao;
 import com.ltev.bookdb.domain.Book;
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
 import java.util.List;
 
 @Repository
 public class BookDaoImpl extends AbstractDaoImpl<Book> implements BookDao {
 
+    public BookDaoImpl(EntityManagerFactory emf) {
+        super(emf, new Book());
+    }
+
     @Override
     public List<Book> findByTitle(String title) {
-        return null;
+        try (var em = emf.createEntityManager()) {
+            return em.createQuery("from Book where title = ?1")
+                    .setParameter(1, title)
+                    .getResultList();
+        }
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        var em = emf.createEntityManager();
+        em.getTransaction().begin();
+        var book = em.find(Book.class, id);
+        book.setAuthor(null);
+        em.remove(book);
+        em.getTransaction().commit();
+        em.close();
     }
 }

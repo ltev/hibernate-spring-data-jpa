@@ -76,6 +76,7 @@ class BookDaoImplTest {
         assertThat(found.getId()).isEqualTo(book.getId());
         assertTrue(equalsWithId(book, found));
         assertTrue(equalsWithId(book.getAuthor(), found.getAuthor()));
+        assertThat(book.getAuthor().getBooks()).isNull();    // FetchType.LAZY
     }
 
     @Test

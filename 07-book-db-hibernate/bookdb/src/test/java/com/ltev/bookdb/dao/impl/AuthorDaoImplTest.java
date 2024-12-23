@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.ltev.bookdb.TestSupport.equalsNoId;
 import static com.ltev.bookdb.TestSupport.equalsWithId;
@@ -29,8 +29,7 @@ class AuthorDaoImplTest {
     private BookDaoImpl bookDao;
 
     Author author;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+
 
     @BeforeEach
     void setUp() {
@@ -76,13 +75,21 @@ class AuthorDaoImplTest {
     }
 
     @Test
+    void findById_nonExisting() {
+        Optional<Author> found = authorDao.findById(-1L);
+
+        assertThat(found).isEmpty();
+    }
+
+    @Test
     void update() {
         authorDao.save(author);
-        author.setFirstName("Mike");
-        author.setLastName("Severic");
 
         // update
+        author.setFirstName("Mike");
+        author.setLastName("Severic");
         authorDao.save(author);
+
         Author found = authorDao.findById(author.getId()).get();
 
         assertTrue(equalsWithId(author, found));
@@ -146,5 +153,12 @@ class AuthorDaoImplTest {
         assertThat(found.getBooks().size()).isEqualTo(2);
         assertTrue(equalsWithId(book1, found.getBooks().get(0)));
         assertTrue(equalsWithId(book2, found.getBooks().get(1)));
+    }
+
+    @Test
+    void findById_joinFetchBooks_nonExistingId() {
+        Optional<Author> found = authorDao.findByIdJoinFetchBooks(-1L);
+
+        assertThat(found).isEmpty();
     }
 }

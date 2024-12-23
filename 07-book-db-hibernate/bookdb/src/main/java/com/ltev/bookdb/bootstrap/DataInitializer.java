@@ -14,6 +14,8 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        bookDao.save(new Book("Book 2", "Author 2", "Genre 2"));
+        Book book2 = new Book("Book 2", "Author 2", "Genre 2");
+        bookDao.save(book2);
+        System.out.println(book2);
     }
 }
