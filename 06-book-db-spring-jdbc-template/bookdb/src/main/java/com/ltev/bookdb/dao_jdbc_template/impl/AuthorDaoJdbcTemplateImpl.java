@@ -48,14 +48,14 @@ public class AuthorDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Autho
             Author author = rowMapper.mapRow(rs, -1);;
             if (rs.getObject(BOOK_START_COLUMN_IDX) != null) {
                 books.add(mapBook(rs, author));
+
+                // next rows
+                while (rs.next()) {
+                    books.add(mapBook(rs, author));
+                }
             }
 
-            // next rows
-            while (rs.next()) {
-                books.add(mapBook(rs, author));
-            }
             author.setBooks(books);
-
             return author;
         }
 
@@ -97,7 +97,7 @@ public class AuthorDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Autho
     }
 
     /**
-     * SimpleJdbcInsert.class
+     * SimpleJdbcInsert.class - returns generated key directly
      *
      * Insert into db when id == null
      * Update db row when id != null

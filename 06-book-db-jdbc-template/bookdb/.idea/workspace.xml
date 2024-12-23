@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b04fbfbf-2df2-4741-8b48-734b967f6448" name="Changes" comment="Reformatting">
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/BookdbApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/bootstrap/DataInitializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/dao/AuthorDao.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/dao/BaseDao.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/dao/BookDao.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/dao/impl/AbstractDaoImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/dao/impl/AuthorDaoImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/dao/impl/BookDaoImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/dao_jdbc_template/impl/AbstractDaoJdbcTemplateImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/dao_jdbc_template/impl/AuthorDaoJdbcTemplateImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/dao_jdbc_template/impl/BookDaoJdbcTemplateImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/domain/Author.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/domain/Book.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/domain/LongIdEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/repository/AuthorRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ltev/bookdb/repository/BookRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__init_baseline.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V2__set_book.author_id_to_fk.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scripts/mysqlusers.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scripts/schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/ltev/bookdb/BookdbApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/ltev/bookdb/TestSupport.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/ltev/bookdb/dao/impl/AuthorDaoImplTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/ltev/bookdb/dao/impl/BookDaoImplTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/ltev/bookdb/dao_jdbc_template/impl/AuthorDaoJdbcTemplateImplTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/ltev/bookdb/dao_jdbc_template/impl/BookDaoJdbcTemplateImplTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/ltev/bookdb/domain/repository/AuthorRepositoryTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/ltev/bookdb/domain/repository/BookRepositoryTest.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="JUnit5 Test Class" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;ltev&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/ltev/hibernate-spring-data-jpa.git&quot;,
+    &quot;accountId&quot;: &quot;66ff3c8c-bed1-4305-9bb5-30582c9c5d6a&quot;
+  }
+}</component>
+  <component name="JpbToolWindowState">
+    <option name="isToolWindowVisible" value="false" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="MigrationScriptOptions">
+    <option name="ignoreImplicitObjects" value="true" />
+    <option name="ignoreSourceCode" value="false" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2qXJzewcLkxfM3dbRfzq12MNY5A" />
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.All in bookdb.executor": "Run",
+    "JUnit.AuthorDaoImplTest.count.executor": "Run",
+    "JUnit.AuthorDaoImplTest.deleteById.executor": "Run",
+    "JUnit.AuthorDaoImplTest.executor": "Run",
+    "JUnit.AuthorDaoImplTest.findByFirstNameAndLastName.executor": "Run",
+    "JUnit.AuthorDaoImplTest.findById.executor": "Debug",
+    "JUnit.AuthorDaoImplTest.save.executor": "Run",
+    "JUnit.AuthorDaoImplTest.saveInBatch.executor": "Run",
+    "JUnit.AuthorDaoImplTest.update.executor": "Run",
+    "JUnit.AuthorDaoJdbcTemplateImplTest.count.executor": "Run",
+    "JUnit.AuthorDaoJdbcTemplateImplTest.deleteById.executor": "Run",
+    "JUnit.AuthorDaoJdbcTemplateImplTest.executor": "Run",
+    "JUnit.AuthorDaoJdbcTemplateImplTest.findBooks.executor": "Run",
+    "JUnit.AuthorDaoJdbcTemplateImplTest.findById_joinFetchBooks.executor": "Run",
+    "JUnit.AuthorDaoJdbcTemplateImplTest.findById_joinFetchBooks_size0.executor": "Run",
+    "JUnit.AuthorDaoJdbcTemplateImplTest.findById_joinFetchBooks_size2.executor": "Run",
+    "JUnit.AuthorDaoJdbcTemplateImplTest.save.executor": "Run",
+    "JUnit.AuthorRepositoryTest.executor": "Run",
+    "JUnit.BookDaoImplTest.count.executor": "Run",
+    "JUnit.BookDaoImplTest.executor": "Run",
+    "JUnit.BookDaoImplTest.findById_withAuthor.executor": "Run",
+    "JUnit.BookDaoImplTest.findByTitle_withAuthor.executor": "Run",
+    "JUnit.BookDaoJdbcTemplateImplTest.count.executor": "Run",
+    "JUnit.BookDaoJdbcTemplateImplTest.deleteById_withAuthor.executor": "Debug",
+    "JUnit.BookDaoJdbcTemplateImplTest.executor": "Run",
+    "JUnit.BookRepositoryTest.authorConnection.executor": "Run",
+    "JUnit.BookRepositoryTest.authorIdRelationship.executor": "Run",
+    "JUnit.BookRepositoryTest.save.executor": "Run",
+    "JUnit.BookdbApplicationTests.contextLoads.executor": "Run",
+    "JUnit.bookdb in bookdb.executor": "Run",
+    "JUnit.com in bookdb.executor": "Run",
+    "JUnit.com.ltev in bookdb.executor": "Run",
+    "JUnit.com.ltev.bookdb.dao_jdbc_template.impl in bookdb.executor": "Run",
+    "JUnit.dao in bookdb.executor": "Run",
+    "JUnit.impl in bookdb (1).executor": "Run",
+    "JUnit.impl in bookdb.executor": "Run",
+    "Maven.bookdb [clean].executor": "Run",
+    "Maven.bookdb [test].executor": "Run",
+    "Maven.bookdb [verify].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.BookdbApplication.executor": "Run",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "database.data.extractors.current.export.id": "SQL Inserts",
+    "database.data.extractors.current.id": "SQL Inserts",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/education/Udemy/java/Hibernate and Spring Data JPA Beginner to Guru/projects/06-book-db-spring-jdbc-template/bookdb",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "reference.projectsettings.compiler.annotationProcessors",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ],
+    "com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect": [
+      "MySQL"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.ltev.bookdb.dao.impl" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\education\Udemy\java\Hibernate and Spring Data JPA Beginner to Guru\projects\06-book-db-jdbc-template\bookdb\src\main\java\com\ltev\bookdb\dao_jdbc_template" />
+      <recent name="E:\education\Udemy\java\Hibernate and Spring Data JPA Beginner to Guru\projects\05-book-db-jdbc\bookdb\src\main\resources\db\migration" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\education\Udemy\java\Hibernate and Spring Data JPA Beginner to Guru\projects\05-book-db-jdbc\bookdb\src\main\scripts" />
+      <recent name="E:\education\Udemy\java\Hibernate and Spring Data JPA Beginner to Guru\projects\05-book-db-jdbc\bookdb\src\main\resources" />
+      <recent name="E:\education\Udemy\java\Hibernate and Spring Data JPA Beginner to Guru\projects\05-book-db-jdbc\bookdb\src\main\resources\db" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.ltev.bookdb.dao_jdbc_template.impl" />
+      <recent name="com.ltev.bookdb.dao.impl" />
+      <recent name="com.ltev.bookdb.domain.repository" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.ltev.bookdb.dao.impl" />
+      <recent name="com.ltev.bookdb.dao" />
+      <recent name="com.ltev.bookdb.domain.repository" />
+      <recent name="com.ltev.bookdb.domain" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.com.ltev.bookdb.dao_jdbc_template.impl in bookdb">
+    <configuration name="AuthorDaoJdbcTemplateImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bookdb" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ltev.bookdb.dao_jdbc_template.impl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ltev.bookdb.dao_jdbc_template.impl" />
+      <option name="MAIN_CLASS_NAME" value="com.ltev.bookdb.dao_jdbc_template.impl.AuthorDaoJdbcTemplateImplTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthorDaoJdbcTemplateImplTest.findById_joinFetchBooks_size0" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bookdb" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ltev.bookdb.dao_jdbc_template.impl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ltev.bookdb.dao_jdbc_template.impl" />
+      <option name="MAIN_CLASS_NAME" value="com.ltev.bookdb.dao_jdbc_template.impl.AuthorDaoJdbcTemplateImplTest" />
+      <option name="METHOD_NAME" value="findById_joinFetchBooks_size0" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthorDaoJdbcTemplateImplTest.findById_joinFetchBooks_size2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bookdb" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ltev.bookdb.dao_jdbc_template.impl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ltev.bookdb.dao_jdbc_template.impl" />
+      <option name="MAIN_CLASS_NAME" value="com.ltev.bookdb.dao_jdbc_template.impl.AuthorDaoJdbcTemplateImplTest" />
+      <option name="METHOD_NAME" value="findById_joinFetchBooks_size2" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="bookdb in bookdb" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bookdb" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/src/test/java/com/ltev/bookdb" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="com.ltev.bookdb.dao_jdbc_template.impl in bookdb" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bookdb" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ltev.bookdb.dao_jdbc_template.impl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ltev.bookdb.dao_jdbc_template.impl" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BookdbApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="bookdb" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ltev.bookdb.BookdbApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.com.ltev.bookdb.dao_jdbc_template.impl in bookdb" />
+        <item itemvalue="JUnit.AuthorDaoJdbcTemplateImplTest.findById_joinFetchBooks_size2" />
+        <item itemvalue="JUnit.AuthorDaoJdbcTemplateImplTest.findById_joinFetchBooks_size0" />
+        <item itemvalue="JUnit.AuthorDaoJdbcTemplateImplTest" />
+        <item itemvalue="JUnit.bookdb in bookdb" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b04fbfbf-2df2-4741-8b48-734b967f6448" name="Changes" comment="" />
+      <created>1734803249324</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1734803249324</updated>
+      <workItem from="1734803250463" duration="21810000" />
+      <workItem from="1734860094118" duration="4603000" />
+      <workItem from="1734865074146" duration="16384000" />
+      <workItem from="1734881528240" duration="320000" />
+      <workItem from="1734891336842" duration="3495000" />
+    </task>
+    <task id="LOCAL-00001" summary="Add project for pattern with JDBC">
+      <option name="closed" value="true" />
+      <created>1734803286762</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1734803286762</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Creating and setting database bookdb2, application.properties. Adding Book class and test for repository">
+      <option name="closed" value="true" />
+      <created>1734806027825</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1734806027825</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added class Author and associated Repository and Test. Update schema.sql,">
+      <option name="closed" value="true" />
+      <created>1734806622125</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1734806622125</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Flyway - schema managing">
+      <option name="closed" value="true" />
+      <created>1734806998519</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1734806998519</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Book.authorId fk relationship added to db">
+      <option name="closed" value="true" />
+      <created>1734807697785</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1734807697785</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Added AuthorDao">
+      <option name="closed" value="true" />
+      <created>1734811006199</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1734811006199</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Added update option in AuthorDao">
+      <option name="closed" value="true" />
+      <created>1734813633901</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1734813633901</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Added methods for AuthorDao, and tests">
+      <option name="closed" value="true" />
+      <created>1734818224992</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1734818224992</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Delegate BaseDao methods implementation to AbstractDaoImpl class">
+      <option name="closed" value="true" />
+      <created>1734822392206</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1734822392206</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Refactoring DAO structure">
+      <option name="closed" value="true" />
+      <created>1734824925238</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1734824925238</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Type migration for Book.authorId (Long) to Book.author (Author)">
+      <option name="closed" value="true" />
+      <created>1734862500166</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1734862500166</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Added saveInBatch functionality to AuthorDao">
+      <option name="closed" value="true" />
+      <created>1734864643319</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1734864643319</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Added new Project for JDBC Template">
+      <option name="closed" value="true" />
+      <created>1734865108274</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1734865108274</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Added classes and tests">
+      <option name="closed" value="true" />
+      <created>1734866473987</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1734866473987</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Implemented AuthorDaoJdbcTemplateImpl methods">
+      <option name="closed" value="true" />
+      <created>1734872057090</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1734872057090</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Implemented BookDaoJdbcTemplateImpl methods">
+      <option name="closed" value="true" />
+      <created>1734873179070</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1734873179070</updated>
+    </task>
+    <task id="LOCAL-00017" summary="SimpleJdbcInsert">
+      <option name="closed" value="true" />
+      <created>1734875821535</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1734875821535</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Added List&lt;Book&gt; relationship to Author class. Added findByIdJoinFetchBooks method for retrieving Books">
+      <option name="closed" value="true" />
+      <created>1734881334447</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1734881334447</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Reformatting">
+      <option name="closed" value="true" />
+      <created>1734893014134</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1734893014134</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add project for pattern with JDBC" />
+    <MESSAGE value="Creating and setting database bookdb2, application.properties. Adding Book class and test for repository" />
+    <MESSAGE value="Added class Author and associated Repository and Test. Update schema.sql," />
+    <MESSAGE value="Flyway - schema managing" />
+    <MESSAGE value="Book.authorId fk relationship added to db" />
+    <MESSAGE value="Added AuthorDao" />
+    <MESSAGE value="Added update option in AuthorDao" />
+    <MESSAGE value="Added methods for AuthorDao, and tests" />
+    <MESSAGE value="Delegate BaseDao methods implementation to AbstractDaoImpl class" />
+    <MESSAGE value="Refactoring DAO structure" />
+    <MESSAGE value="Type migration for Book.authorId (Long) to Book.author (Author)" />
+    <MESSAGE value="Added saveInBatch functionality to AuthorDao" />
+    <MESSAGE value="Added new Project for JDBC Template" />
+    <MESSAGE value="Added classes and tests" />
+    <MESSAGE value="Implemented AuthorDaoJdbcTemplateImpl methods" />
+    <MESSAGE value="Implemented BookDaoJdbcTemplateImpl methods" />
+    <MESSAGE value="SimpleJdbcInsert" />
+    <MESSAGE value="Added List&lt;Book&gt; relationship to Author class. Added findByIdJoinFetchBooks method for retrieving Books" />
+    <MESSAGE value="Reformatting" />
+    <option name="LAST_COMMIT_MESSAGE" value="Reformatting" />
+  </component>
+</project>
