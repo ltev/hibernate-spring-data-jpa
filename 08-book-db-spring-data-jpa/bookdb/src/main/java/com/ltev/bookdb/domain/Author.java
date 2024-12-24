@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 public class Author implements LongIdEntity {
 
     @Id
@@ -24,11 +24,15 @@ public class Author implements LongIdEntity {
     private String lastName;
 
     @OneToMany(mappedBy = "author")
-    private List<Book> books = Collections.emptyList();
+    private List<Book> books = new ArrayList<>();
 
     public Author(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public void addBook(Book book) {
+        this.books.add(book);
     }
 
     @Override
@@ -37,7 +41,7 @@ public class Author implements LongIdEntity {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", booksIds=" + books +
+                ", booksIds=" + books.stream().map(Book::getId).toList() +
                 '}';
     }
 }

@@ -10,7 +10,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @NamedQuery(name = "findAllByIsbnLike", query = "from Book where isbn like ?1")
 public class Book implements LongIdEntity {
 
@@ -34,5 +33,10 @@ public class Book implements LongIdEntity {
         this.publisher = publisher;
         this.isbn = isbn;
         this.author = author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+        //author.addBook(this);
     }
 }
