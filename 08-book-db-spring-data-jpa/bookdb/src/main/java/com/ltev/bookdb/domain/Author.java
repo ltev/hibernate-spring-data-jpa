@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -23,10 +24,20 @@ public class Author implements LongIdEntity {
     private String lastName;
 
     @OneToMany(mappedBy = "author")
-    private List<Book> books;
+    private List<Book> books = Collections.emptyList();
 
     public Author(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", booksIds=" + books +
+                '}';
     }
 }

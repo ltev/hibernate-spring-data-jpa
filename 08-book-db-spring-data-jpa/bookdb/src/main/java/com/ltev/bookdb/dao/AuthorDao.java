@@ -10,6 +10,8 @@ public interface AuthorDao extends BaseDao<Author, Long> {
 
     List<Author> findByFirstNameAndLastName(String firstName, String lastName);
 
+    int saveInBatch(List<Author> authors);
+
     List<Book> findBooks(Long authorId);
 
     Optional<Author> findByIdJoinFetchBooks(Long authorId);

@@ -1,7 +1,11 @@
 package com.ltev.bookdb.repository;
 
 import com.ltev.bookdb.domain.Author;
+import com.ltev.bookdb.domain.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AuthorRepository extends JpaRepository<Author, Long> {
+import java.util.List;
+
+public interface BookRepository extends JpaRepository<Book, Long> {
+
 }

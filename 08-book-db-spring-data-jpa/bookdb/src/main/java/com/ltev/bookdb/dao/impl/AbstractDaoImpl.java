@@ -2,39 +2,31 @@ package com.ltev.bookdb.dao.impl;
 
 import com.ltev.bookdb.dao.BaseDao;
 import com.ltev.bookdb.domain.LongIdEntity;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
 public abstract class AbstractDaoImpl<T extends LongIdEntity> implements BaseDao<T, Long> {
 
-    private JpaRepository<T, Long> repository;
-
     @Override
     public long count() {
-        return repository.count();
+        return 0;
     }
 
     @Override
     public T save(T t) {
-        return repository.save(t);
+        return null;
     }
 
     @Override
-    public int saveInBatch(List<T> entities) {
-        return repository.saveAll(entities).size();
+    public Optional<T> findById(Long aLong) {
+        return Optional.empty();
     }
 
     @Override
-    public Optional<T> findById(Long id) {
-        return repository.findById(id);
-    }
+    public void deleteById(Long aLong) {
 
-    @Override
-    public void deleteById(Long id) {
-        repository.deleteById(id);
     }
 }
