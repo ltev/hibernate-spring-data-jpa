@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
+import static com.ltev.bookdb.TestSupport.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -158,26 +159,23 @@ class BookDaoImplTest {
         assertThat(authorDao.count()).isEqualTo(authorCountAfterSave);              // author should not be deleted
     }
 
-    // == PRIVATE HELPER METHODS ==
+    @Test
+    void findByIsbnLike() {
+        String startWith = "123";
+        var books = List.of(
+                new Book("xyz", "xyz", startWith + "543093"),
+                new Book("xyz", "xyz", "000543093"),
+                new Book("xyz", "xyz", startWith + "343093"),
+                new Book("xyz", "xyz", startWith + "543093"),
+                new Book("xyz", "xyz", "0003093"));
 
-    private boolean equalsWithId(Book b1, Book b2) {
-        return  b1.getId().equals(b2.getId())
-                && equalsNoId(b1, b2);
-    }
+        for (Book b : books) {
+            bookDao.save(b);
+        }
 
-    private boolean equalsNoId(Book b1, Book b2) {
-        return  b1.getTitle().equals(b2.getTitle())
-                && b1.getPublisher().equals(b2.getPublisher())
-                && b1.getIsbn().equals(b2.getIsbn());
-    }
+        List<Book> found = bookDao.findByIsbnLike(startWith);
 
-    private boolean equalsWithId(Author a1, Author a2) {
-        return  a1.getId().equals(a2.getId())
-                && equalsNoId(a1, a2);
-    }
-
-    private boolean equalsNoId(Author a1, Author a2) {
-        return  a1.getFirstName().equals(a2.getFirstName())
-                && a1.getLastName().equals(a2.getLastName());
+        assertThat(found.size()).isGreaterThanOrEqualTo(3);
+        assertThat(found.stream().allMatch(b -> b.getIsbn().startsWith(startWith))).isTrue();
     }
 }

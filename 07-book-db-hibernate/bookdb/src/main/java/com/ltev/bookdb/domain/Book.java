@@ -11,6 +11,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@NamedQuery(name = "findAllByIsbnLike", query = "from Book where isbn like ?1")
 public class Book implements LongIdEntity {
 
     @Id

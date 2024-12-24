@@ -33,4 +33,13 @@ public class BookDaoImpl extends AbstractDaoImpl<Book> implements BookDao {
         em.getTransaction().commit();
         em.close();
     }
+
+    @Override
+    public List<Book> findByIsbnLike(String isbnStart) {
+        try (var em = emf.createEntityManager()) {
+            return em.createNamedQuery("findAllByIsbnLike", Book.class)
+                    .setParameter(1, isbnStart + "%")
+                    .getResultList();
+        }
+    }
 }
