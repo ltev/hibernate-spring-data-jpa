@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.ltev.bookdb.TestSupport.equalsNoId;
 import static com.ltev.bookdb.TestSupport.equalsWithId;
@@ -136,6 +137,26 @@ class AuthorRepositoryTest {
         assertThat(list.size()).isEqualTo(countBefore + 2);
         assertTrue(equalsNoId(erikMcGrab, list.get(0)));
         assertTrue(equalsNoId(erikMcGrab, list.get(1)));
+    }
+
+    @Test
+    @Transactional
+    void findByLastNameLike() {
+        String LAST_NAME_START = "McG";
+
+        Author erikMcGrab = new Author("Erik", "McGrab");
+        long countBefore = authorRepository.findByLastNameLike(LAST_NAME_START + "%").count();
+
+        // Save 4 times McG%
+        authorRepository.save(new Author("Erik", "McGrab"));
+        authorRepository.save(new Author("Dave", "McGyver"));
+        authorRepository.save(new Author("Erik", "Willow"));
+        authorRepository.save(new Author("Erik", "McGursky"));
+        authorRepository.save(new Author("Ela", "McGrab"));
+
+        Stream<Author> stream = authorRepository.findByLastNameLike(LAST_NAME_START + "%");
+
+        assertThat(stream.count()).isEqualTo(countBefore + 4);
     }
 
     @Test
