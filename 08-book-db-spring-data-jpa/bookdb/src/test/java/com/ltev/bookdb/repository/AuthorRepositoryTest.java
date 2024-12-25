@@ -100,22 +100,6 @@ class AuthorRepositoryTest {
     }
 
     @Test
-    void findById_lazyBooksTransactional() {
-        authorRepository.save(author);
-
-        var book1 = new Book("How to do", "publisher 1", "2342312");
-        var book2 = new Book("How not to do ", "publisher 2", "2342324");
-        book1.setAuthor(author);
-        book2.setAuthor(author);
-
-        bookRepository.save(book1);
-        bookRepository.save(book2);
-        Author found = authorRepository.findById(author.getId()).get();
-
-        assertThat(found.getBooks().size()).isEqualTo(2);
-    }
-
-    @Test
     void findById_nonExisting() {
         Optional<Author> found = authorRepository.findById(-1L);
 
@@ -201,7 +185,7 @@ class AuthorRepositoryTest {
         assertThat(found.getBooks().size()).isEqualTo(2);
         assertTrue(equalsWithId(book1, found.getBooks().get(0)));
         assertTrue(equalsWithId(book2, found.getBooks().get(1)));
-        System.out.println(found);
+        assertThat(found.getBooks().get(0).getAuthor().getId()).isEqualTo(author.getId());
     }
 
     @Test

@@ -92,7 +92,7 @@ class BookRepositoryTest {
 
         assertThat(found.getId()).isNotNull();
         assertTrue(equalsWithId(book, found));
-        assertThatExceptionOfType(LazyInitializationException.class).isThrownBy(() -> book.getAuthor());
+        assertThatExceptionOfType(LazyInitializationException.class).isThrownBy(() -> book.getAuthor().getId());
     }
 
     @Test
@@ -172,5 +172,14 @@ class BookRepositoryTest {
 
         assertThat(bookRepository.count()).isEqualTo(bookCountAfterSave - 1);
         assertThat(authorRepository.count()).isEqualTo(authorCountAfterSave);              // author should not be deleted
+    }
+
+    @Test
+    void findByIsbn() {
+        bookRepository.save(book);
+
+        Book found = bookRepository.findByIsbn(book.getIsbn());
+
+        assertTrue(equalsWithId(book, found));
     }
 }

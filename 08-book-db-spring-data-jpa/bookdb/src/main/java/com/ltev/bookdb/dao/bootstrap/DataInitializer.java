@@ -25,13 +25,13 @@ public class DataInitializer implements CommandLineRunner {
 
         var book1 = new Book("How to do", "publisher 1", "2342312");
         var book2 = new Book("How not to do ", "publisher 2", "2342324");
-        //book1.setAuthor(author);
-        //book2.setAuthor(author);
+        book1.setAuthor(author);
+        book2.setAuthor(author);
 
         bookRepository.save(book1);
         bookRepository.save(book2);
 
         Author found = authorRepository.findByIdJoinFetchBooks(author.getId()).get();
-        System.out.println(found);
+        System.out.println(found.getBooks());
     }
 }

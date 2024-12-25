@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @NoArgsConstructor
@@ -21,7 +21,7 @@ public class Book implements LongIdEntity {
     private String publisher;
     private String isbn;
 
-    @ManyToOne(fetch = FetchType.LAZY)              // EAGER
+    @ManyToOne(fetch = FetchType.LAZY)
     private Author author;
 
     public Book(String title, String publisher, String isbn) {
@@ -38,5 +38,16 @@ public class Book implements LongIdEntity {
     public void setAuthor(Author author) {
         this.author = author;
         //author.addBook(this);
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", publisher='" + publisher + '\'' +
+                ", isbn='" + isbn + '\'' +
+                ", author=" + (author instanceof HibernateProxy ? "HibernateProxy" : author) +
+                '}';
     }
 }
