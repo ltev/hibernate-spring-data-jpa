@@ -153,6 +153,132 @@ class BookRepositoryTest {
     }
 
     @Test
+    void findByTitle_query() {
+        String TITLE = "This one 2";
+        long countBefore = bookRepository.findByTitleQuery(TITLE).size();
+
+        // Save twice
+        bookRepository.save(new Book(TITLE, "This publisher", "123456789"));
+        bookRepository.save(new Book("x", "y", "z"));
+        bookRepository.save(new Book("x", "y", "z"));
+        bookRepository.save(new Book(TITLE, "This publisher", "123456789"));
+
+        Book thisOne = new Book(TITLE, "This publisher", "123456789");
+        List<Book> list = bookRepository.findByTitleQuery(thisOne.getTitle());
+
+        assertThat(list.size()).isEqualTo(countBefore + 2);
+        assertTrue(equalsNoId(thisOne, list.get(0)));
+        assertTrue(equalsNoId(thisOne, list.get(1)));
+    }
+
+    @Test
+    void findByTitle_withAuthor_query() {
+        authorRepository.save(author);
+
+        String TITLE = "This one 2";
+        long countBefore = bookRepository.findByTitleQuery(TITLE).size();
+
+        // Save twice
+        bookRepository.save(new Book(TITLE, "This publisher", "123456789", author));
+        bookRepository.save(new Book("x", "y", "z"));
+        bookRepository.save(new Book("x", "y", "z"));
+        bookRepository.save(new Book(TITLE, "This publisher", "123456789", author));
+
+        Book thisOne = new Book(TITLE, "This publisher", "123456789");
+        List<Book> list = bookRepository.findByTitleQuery(thisOne.getTitle());
+
+        assertThat(list.size()).isEqualTo(countBefore + 2);
+        assertTrue(equalsNoId(thisOne, list.get(0)));
+        assertTrue(equalsNoId(thisOne, list.get(1)));
+        assertTrue(equalsWithId(author, list.get(list.size() - 1).getAuthor()));
+        assertTrue(equalsWithId(author, list.get(list.size() - 2).getAuthor()));
+    }
+
+    @Test
+    void findByTitle_queryNamed() {
+        String TITLE = "This one 2";
+        long countBefore = bookRepository.findByTitleQueryNamed(TITLE).size();
+
+        // Save twice
+        bookRepository.save(new Book(TITLE, "This publisher", "123456789"));
+        bookRepository.save(new Book("x", "y", "z"));
+        bookRepository.save(new Book("x", "y", "z"));
+        bookRepository.save(new Book(TITLE, "This publisher", "123456789"));
+
+        Book thisOne = new Book(TITLE, "This publisher", "123456789");
+        List<Book> list = bookRepository.findByTitleQueryNamed(thisOne.getTitle());
+
+        assertThat(list.size()).isEqualTo(countBefore + 2);
+        assertTrue(equalsNoId(thisOne, list.get(0)));
+        assertTrue(equalsNoId(thisOne, list.get(1)));
+    }
+
+    @Test
+    void findByTitle_withAuthor_queryNamed() {
+        authorRepository.save(author);
+
+        String TITLE = "This one 2";
+        long countBefore = bookRepository.findByTitleQueryNamed(TITLE).size();
+
+        // Save twice
+        bookRepository.save(new Book(TITLE, "This publisher", "123456789", author));
+        bookRepository.save(new Book("x", "y", "z"));
+        bookRepository.save(new Book("x", "y", "z"));
+        bookRepository.save(new Book(TITLE, "This publisher", "123456789", author));
+
+        Book thisOne = new Book(TITLE, "This publisher", "123456789");
+        List<Book> list = bookRepository.findByTitleQueryNamed(thisOne.getTitle());
+
+        assertThat(list.size()).isEqualTo(countBefore + 2);
+        assertTrue(equalsNoId(thisOne, list.get(0)));
+        assertTrue(equalsNoId(thisOne, list.get(1)));
+        assertTrue(equalsWithId(author, list.get(list.size() - 1).getAuthor()));
+        assertTrue(equalsWithId(author, list.get(list.size() - 2).getAuthor()));
+    }
+
+    @Test
+    void findByTitle_nativeQuery() {
+        String TITLE = "This one 2";
+        long countBefore = bookRepository.findByTitleNativeQuery(TITLE).size();
+
+        // Save twice
+        bookRepository.save(new Book(TITLE, "This publisher", "123456789"));
+        bookRepository.save(new Book("x", "y", "z"));
+        bookRepository.save(new Book("x", "y", "z"));
+        bookRepository.save(new Book(TITLE, "This publisher", "123456789"));
+
+        Book thisOne = new Book(TITLE, "This publisher", "123456789");
+        List<Book> list = bookRepository.findByTitleNativeQuery(thisOne.getTitle());
+
+        assertThat(list.size()).isEqualTo(countBefore + 2);
+        assertTrue(equalsNoId(thisOne, list.get(0)));
+        assertTrue(equalsNoId(thisOne, list.get(1)));
+    }
+
+    @Test
+    void findByTitle_withAuthor_nativeQuery() {
+        authorRepository.save(author);
+
+        String TITLE = "This one 2";
+        long countBefore = bookRepository.findByTitleNativeQuery(TITLE).size();
+
+        // Save twice
+        bookRepository.save(new Book(TITLE, "This publisher", "123456789", author));
+        bookRepository.save(new Book("x", "y", "z"));
+        bookRepository.save(new Book("x", "y", "z"));
+        bookRepository.save(new Book(TITLE, "This publisher", "123456789", author));
+
+        Book thisOne = new Book(TITLE, "This publisher", "123456789");
+        List<Book> list = bookRepository.findByTitleNativeQuery(thisOne.getTitle());
+
+        assertThat(list.size()).isEqualTo(countBefore + 2);
+        assertTrue(equalsNoId(thisOne, list.get(0)));
+        assertTrue(equalsNoId(thisOne, list.get(1)));
+        assertTrue(equalsWithId(author, list.get(list.size() - 1).getAuthor()));
+        assertTrue(equalsWithId(author, list.get(list.size() - 2).getAuthor()));
+    }
+
+    @Test
     void deleteById() {
         bookRepository.save(book);
         long countAfterSave = bookRepository.count();
