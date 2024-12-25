@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import static com.ltev.bookdb.TestSupport.equalsNoId;
 import static com.ltev.bookdb.TestSupport.equalsWithId;
@@ -181,5 +183,16 @@ class BookRepositoryTest {
         Book found = bookRepository.findByIsbn(book.getIsbn());
 
         assertTrue(equalsWithId(book, found));
+    }
+
+    @Test
+    void queryByIsbn_asyncFuture() throws ExecutionException, InterruptedException {
+        String isbn = "789456123abc";
+        bookRepository.save(new Book("Query by isbn", "new publisher", isbn));
+
+        Future<Book> futureBook = bookRepository.queryByIsbn(isbn);
+        Book found = futureBook.get();
+
+        assertThat(found).isNotNull();
     }
 }
