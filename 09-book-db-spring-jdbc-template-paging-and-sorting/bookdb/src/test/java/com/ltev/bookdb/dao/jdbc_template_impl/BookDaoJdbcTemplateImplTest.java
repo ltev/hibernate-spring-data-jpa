@@ -266,14 +266,18 @@ class BookDaoJdbcTemplateImplTest {
     void findAllSortByTitleAsc() {
         bookDao.save(new Book("bbb", null, null));
         bookDao.save(new Book("ccc", null, null));
+        bookDao.save(new Book("AAA", null, null));
         bookDao.save(new Book("aaa", null, null));
 
         List<Book> found = bookDao.findAllSortByTitleAsc();
 
         for (int i = 1; i < found.size(); i++) {
             var b1 = found.get(i - 1);
+            if (b1.getTitle() == null) {
+                continue;
+            }
             var b2 = found.get(i);
-            assertThat(b1.getTitle()).isLessThanOrEqualTo(b2.getTitle());
+            assertThat(b1.getTitle().toLowerCase()).isLessThanOrEqualTo(b2.getTitle().toLowerCase());
         }
     }
 }

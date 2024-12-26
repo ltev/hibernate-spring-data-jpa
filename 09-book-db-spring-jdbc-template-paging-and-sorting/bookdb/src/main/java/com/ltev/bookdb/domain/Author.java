@@ -22,7 +22,7 @@ public class Author implements LongIdEntity {
     private String firstName;
     private String lastName;
 
-    @Transient
+    @OneToMany(mappedBy = "author")
     private List<Book> books;
 
     public Author(String firstName, String lastName) {
