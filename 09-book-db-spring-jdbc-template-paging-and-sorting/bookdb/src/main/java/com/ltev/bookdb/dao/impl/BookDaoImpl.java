@@ -3,6 +3,7 @@ package com.ltev.bookdb.dao.impl;
 import com.ltev.bookdb.dao.AuthorDao;
 import com.ltev.bookdb.dao.BookDao;
 import com.ltev.bookdb.domain.Book;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -70,5 +71,25 @@ public class BookDaoImpl extends AbstractDaoImpl<Book> implements BookDao {
             );
         }
         return book;
+    }
+
+    @Override
+    public List<Book> findAll() {
+        return null;
+    }
+
+    @Override
+    public List<Book> findAll(int pageSize, int offset) {
+        return null;
+    }
+
+    @Override
+    public List<Book> findAllByTitle(String title, int pageSize, int offset) {
+        return null;
+    }
+
+    @Override
+    public List<Book> findAllByTitle(String title, Pageable pageable) {
+        return null;
     }
 }

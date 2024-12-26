@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
-import java.util.List;
+import java.util.*;
 
 import static com.ltev.bookdb.TestSupport.equalsNoId;
 import static com.ltev.bookdb.TestSupport.equalsWithId;
@@ -131,7 +134,7 @@ class BookDaoJdbcTemplateImplTest {
         assertThat(list.size()).isEqualTo(countBefore + 2);
         assertTrue(equalsNoId(thisOne, list.get(0)));
         assertTrue(equalsNoId(thisOne, list.get(1)));
-        assertTrue(equalsWithId(author, list.getLast().getAuthor()));
+        assertTrue(equalsWithId(author, list.get(list.size() - 1).getAuthor()));
         assertTrue(equalsWithId(author, list.get(list.size() - 2).getAuthor()));
     }
 
@@ -157,5 +160,120 @@ class BookDaoJdbcTemplateImplTest {
 
         assertThat(bookDao.count()).isEqualTo(bookCountAfterSave - 1);
         assertThat(authorDao.count()).isEqualTo(authorCountAfterSave);              // author should not be deleted
+    }
+
+    @Test
+    void findAll() {
+        bookDao.save(new Book("hj hej", "p1", "123"));
+        bookDao.save(new Book("hj hej 2", "p1", "123"));
+
+        List<Book> found = bookDao.findAll();
+
+        assertThat(found.size()).isGreaterThanOrEqualTo(2);
+    }
+
+    @Test
+    void findAll_page1() {
+        for (int i = 0; i < 5; i++) {
+            bookDao.save(new Book("" + i, "" + i, "" + i));
+        }
+
+        List<Book> found = bookDao.findAll(5, 0);
+
+        assertThat(found.size()).isEqualTo(5);
+    }
+
+    @Test
+    void findAll_page2() {
+        for (int i = 0; i < 10; i++) {
+            bookDao.save(new Book("" + i, "" + i, "" + i));
+        }
+
+        List<Book> found = bookDao.findAll(5, 5);
+
+        assertThat(found.size()).isEqualTo(5);
+    }
+
+    @Test
+    void findAll_pageableSortable_sortByTitleAsc() {
+        Random random = new Random();
+        for (int i = 0; i < 9; i++) {
+            bookDao.save(new Book("findAll_pageableSortable: " + random.nextInt(0, 100), "" + i, "" + i));
+        }
+
+        List<Book> found = bookDao.findAll(
+                PageRequest.of(1, 5),
+                Sort.by(Sort.Order.asc("title")));
+
+        assertThat(found.size()).isEqualTo(4);
+        assertThat(found).isSortedAccordingTo(Comparator.comparing(Book::getTitle));
+    }
+
+    @Test
+    void findAll_pageableSortable_sortByPublisherDescTitleAsc() {
+        Random random = new Random();
+        String[] publishers = {"p1", "p2"};
+        String[] titles = {"t1", "t2"};
+
+        for (int i = 0; i < 19; i++) {
+            bookDao.save(new Book(titles[random.nextInt(0, 2)], publishers[random.nextInt(0, 2)], null));
+        }
+
+        List<Book> found = bookDao.findAll(
+                PageRequest.of(0, 10),
+                Sort.by(Sort.Order.desc("publisher"), Sort.Order.asc("title"))
+        );
+
+        assertThat(found.size()).isEqualTo(10);
+        for (int i = 1; i < found.size(); i++) {
+            var b1 = found.get(i - 1);
+            var b2 = found.get(i);
+            assertThat(b1.getPublisher()).isGreaterThanOrEqualTo(b2.getPublisher());
+
+            if (b1.getPublisher().equals(b2.getPublisher()) == false) {
+                assertThat(b1.getTitle()).isLessThanOrEqualTo(b2.getTitle());
+            }
+        }
+    }
+
+    @Test
+    void findAllByTitle_page2() {
+        String tile = "Unique title for test: findAllByTitle_page2";
+        for (int i = 0; i < 8; i++) {
+            bookDao.save(new Book(tile, null, null));
+        }
+
+        List<Book> found = bookDao.findAllByTitle(tile, 5, 5);
+
+        assertThat(found.size()).isEqualTo(3);
+    }
+
+    @Test
+    void findAllByTitle_pageablePage2() {
+        String tile = "Unique title for test: findAllByTitle_pageablePage2";
+        for (int i = 0; i < 8; i++) {
+            bookDao.save(new Book(tile, null, null));
+        }
+
+        // Pageable pageable = Pageable.ofSize(5).withPage(1);                      // page indexes start at 0
+        Pageable pageable = PageRequest.of(1, 5);               // page indexes start at 0
+        List<Book> found = bookDao.findAllByTitle(tile, pageable);
+
+        assertThat(found.size()).isEqualTo(3);
+    }
+
+    @Test
+    void findAllSortByTitleAsc() {
+        bookDao.save(new Book("bbb", null, null));
+        bookDao.save(new Book("ccc", null, null));
+        bookDao.save(new Book("aaa", null, null));
+
+        List<Book> found = bookDao.findAllSortByTitleAsc();
+
+        for (int i = 1; i < found.size(); i++) {
+            var b1 = found.get(i - 1);
+            var b2 = found.get(i);
+            assertThat(b1.getTitle().compareTo(b2.getTitle()) <= 1);
+        }
     }
 }

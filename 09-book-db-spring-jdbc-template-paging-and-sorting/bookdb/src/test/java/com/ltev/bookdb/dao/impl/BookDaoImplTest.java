@@ -129,7 +129,7 @@ class BookDaoImplTest {
         assertThat(list.size()).isEqualTo(countBefore + 2);
         assertTrue(equalsNoId(thisOne, list.get(0)));
         assertTrue(equalsNoId(thisOne, list.get(1)));
-        assertTrue(equalsWithId(author, list.getLast().getAuthor()));
+        assertTrue(equalsWithId(author, list.get(list.size() - 1).getAuthor()));
         assertTrue(equalsWithId(author, list.get(list.size() - 2).getAuthor()));
     }
 
