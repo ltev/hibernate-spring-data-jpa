@@ -19,7 +19,11 @@ public class BookDaoHibernate extends AbstractDaoHibernate<Book> implements Book
 
     @Override
     public List<Book> findByTitle(String title) {
-        return null;
+        try (var em = emf.createEntityManager()) {
+            return em.createQuery("from Book where title = ?1", Book.class)
+                    .setParameter(1, title)
+                    .getResultList();
+        }
     }
 
     @Override
