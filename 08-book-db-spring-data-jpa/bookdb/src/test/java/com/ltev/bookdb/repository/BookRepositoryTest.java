@@ -4,7 +4,9 @@ import com.ltev.bookdb.domain.Author;
 import com.ltev.bookdb.domain.Book;
 import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -21,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestMethodOrder(MethodOrderer.DisplayName.class)
 class BookRepositoryTest {
 
     @Autowired
@@ -320,5 +323,28 @@ class BookRepositoryTest {
         Book found = futureBook.get();
 
         assertThat(found).isNotNull();
+    }
+
+    @Test
+    void findByIsbn_namedQuery() {
+        bookRepository.save(book);
+
+        Book found = bookRepository.findByIsbn(book.getIsbn());
+
+        assertTrue(equalsWithId(book, found));
+    }
+
+    @Test
+    void jpaNamedQueryForFindingAllByIsbnLike_namedQuery() {
+        String isbnStart = "123";
+        long countBefore = bookRepository.jpaNamedQueryForFindingAllByIsbnLike(isbnStart + "%").size();
+
+        book.setIsbn(isbnStart + "4322");
+        bookRepository.save(book);
+
+        var foundList = bookRepository.jpaNamedQueryForFindingAllByIsbnLike(isbnStart + "%");
+
+        assertThat(foundList.size()).isEqualTo(countBefore + 1);
+        foundList.forEach(b -> assertThat(b.getIsbn().startsWith(isbnStart)));
     }
 }

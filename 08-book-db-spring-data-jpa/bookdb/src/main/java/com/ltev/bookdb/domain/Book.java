@@ -10,7 +10,7 @@ import org.hibernate.proxy.HibernateProxy;
 @NoArgsConstructor
 @Getter
 @Setter
-@NamedQuery(name = "findAllByIsbnLike", query = "from Book where isbn like ?1")
+@NamedQuery(name = "Book.jpaNamedQueryForFindingAllByIsbnLike", query = "from Book where isbn like ?1")
 public class Book implements LongIdEntity {
 
     @Id

@@ -31,4 +31,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Async
     Future<Book> queryByIsbn(String isbn);
+
+    List<Book> jpaNamedQueryForFindingAllByIsbnLike(String isbnStart);
 }
