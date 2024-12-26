@@ -56,6 +56,13 @@ public class AuthorDaoImpl extends AbstractDaoImpl<Author> implements AuthorDao 
     }
 
     @Override
+    public List<Author> findByLastNameSortByFirstName(String lastName) {
+        return null;
+    }
+
+    // == PROTECTED ==
+
+    @Override
     protected String getInsertSql() {
         return INSERT_SQL;
     }

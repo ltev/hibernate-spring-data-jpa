@@ -5,6 +5,9 @@ import com.ltev.bookdb.domain.Author;
 import com.ltev.bookdb.domain.Book;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
@@ -147,6 +150,32 @@ public class AuthorDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Autho
     public Optional<Author> findByIdJoinFetchBooks(Long authorId) {
         return Optional.ofNullable(jdbcTemplate.query(FIND_BY_ID_JOIN_FETCH_BOOKS_SQL, authorExtractor, authorId));
     }
+
+    @Override
+    public List<Author> findByLastNameSortByFirstName(String lastName) {
+        return jdbcTemplate.query("select * from author where last_name = ? order by first_name asc", rowMapper, lastName);
+    }
+
+    @Override
+    public List<Author> findByLastNameSortByFirstName(String lastName, Pageable pageable) {
+        StringBuilder orderBuilder;
+        Sort sort = pageable.getSort();
+        if (sort.isSorted()) {
+            orderBuilder = new StringBuilder(" order by ");
+            sort.get().forEach(o -> orderBuilder.append(o.getProperty()).append(" ").append(o.getDirection()).append(","));
+            orderBuilder.deleteCharAt(orderBuilder.length() - 1);
+        } else {
+            orderBuilder = null;
+        }
+
+        StringBuilder sqlBuilder = new StringBuilder("select * from author where last_name = ?")
+                .append(orderBuilder != null ? orderBuilder.toString() : "")
+                .append(" limit ? offset ?");
+        return jdbcTemplate.query(sqlBuilder.toString(), rowMapper,
+                lastName, pageable.getPageSize(), pageable.getOffset());
+    }
+
+    // == PROTECTED ==
 
     @Override
     protected String getInsertSql() {
