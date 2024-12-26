@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
+import static com.ltev.bookdb.TestSupport.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -155,28 +156,5 @@ class BookDaoImplTest {
 
         assertThat(bookDao.count()).isEqualTo(bookCountAfterSave - 1);
         assertThat(authorDao.count()).isEqualTo(authorCountAfterSave);              // author should not be deleted
-    }
-
-    // == PRIVATE HELPER METHODS ==
-
-    private boolean equalsWithId(Book b1, Book b2) {
-        return  b1.getId().equals(b2.getId())
-                && equalsNoId(b1, b2);
-    }
-
-    private boolean equalsNoId(Book b1, Book b2) {
-        return  b1.getTitle().equals(b2.getTitle())
-                && b1.getPublisher().equals(b2.getPublisher())
-                && b1.getIsbn().equals(b2.getIsbn());
-    }
-
-    private boolean equalsWithId(Author a1, Author a2) {
-        return  a1.getId().equals(a2.getId())
-                && equalsNoId(a1, a2);
-    }
-
-    private boolean equalsNoId(Author a1, Author a2) {
-        return  a1.getFirstName().equals(a2.getFirstName())
-                && a1.getLastName().equals(a2.getLastName());
     }
 }

@@ -5,6 +5,7 @@ import com.ltev.bookdb.domain.Author;
 import com.ltev.bookdb.domain.Book;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,7 +26,11 @@ public class AuthorDaoHibernate extends AbstractDaoHibernate<Author> implements 
 
     @Override
     public List<Book> findBooks(Long authorId) {
-        return null;
+        try (var em = emf.createEntityManager()) {
+            return em.createNativeQuery("select * from book where author_id = ?1")
+                    .setParameter(1, authorId)
+                    .getResultList();
+        }
     }
 
     @Override
@@ -50,11 +55,26 @@ public class AuthorDaoHibernate extends AbstractDaoHibernate<Author> implements 
 
     @Override
     public List<Author> findByLastNameSortByFirstName(String lastName) {
-        return null;
+        try (var em = emf.createEntityManager()) {
+            return em.createQuery("from Author where lastName = ?1 order by firstName")
+                    .setParameter(1, lastName)
+                    .getResultList();
+        }
     }
 
     @Override
     public List<Author> findByLastNameSortByFirstName(String lastName, Pageable pageable) {
-        return AuthorDao.super.findByLastNameSortByFirstName(lastName, pageable);
+        try (var em = emf.createEntityManager()) {
+            Sort.Order order = pageable.getSort().getOrderFor("first_name");
+            String sql = new StringBuilder("from Author where lastName = ?1 order by firstName ")
+                    .append(order != null ? order.getDirection() : "asc")
+                    .append(" limit ?2 offset ?3")
+                    .toString();
+            return em.createQuery(sql, Author.class)
+                    .setParameter(1, lastName)
+                    .setParameter(2, pageable.getPageSize())
+                    .setParameter(3, pageable.getOffset())
+                    .getResultList();
+        }
     }
 }
