@@ -3,14 +3,12 @@ package com.ltev.bookdb.dao.hibernate;
 import com.ltev.bookdb.dao.BookDao;
 import com.ltev.bookdb.domain.Book;
 import jakarta.persistence.EntityManagerFactory;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.TypedQuery;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public class BookDaoHibernate extends AbstractDaoHibernate<Book> implements BookDao {
 
     public BookDaoHibernate(EntityManagerFactory emf) {
@@ -28,31 +26,68 @@ public class BookDaoHibernate extends AbstractDaoHibernate<Book> implements Book
 
     @Override
     public List<Book> findAll() {
-        return null;
+        return runQueryGetList("from Book", Book.class, List.of());
     }
 
     @Override
     public List<Book> findAll(int pageSize, int offset) {
-        return null;
+        // can not put 'limit' directly after Book
+        return runQueryGetList("from Book order by id limit ?1 offset ?2", Book.class, List.of(pageSize, offset));
     }
 
     @Override
     public List<Book> findAll(Pageable pageable, Sort sort) {
-        return BookDao.super.findAll(pageable, sort);
+        StringBuilder hqlBuilder = new StringBuilder("from Book");
+        if (sort.isSorted()) {
+            hqlBuilder.append(" order by ");
+            sort.get().forEach(o -> hqlBuilder
+                    .append(o.getProperty())
+                    .append(" ")
+                    .append(o.getDirection())
+                    .append(","));
+            hqlBuilder.deleteCharAt(hqlBuilder.length() - 1);
+        }
+        return runQueryGetList(hqlBuilder.toString(), Book.class, List.of(), pageable);
     }
 
     @Override
     public List<Book> findAllByTitle(String title, int pageSize, int offset) {
-        return null;
+        return runQueryGetList("from Book where title = ?3 order by id limit ?1 offset ?2", Book.class, List.of(pageSize, offset, title));
     }
 
     @Override
     public List<Book> findAllByTitle(String title, Pageable pageable) {
-        return null;
+        return runQueryGetList("from Book where title = ?1", clazz, List.of(title), pageable);
     }
 
     @Override
     public List<Book> findAllSortByTitleAsc() {
-        return BookDao.super.findAllSortByTitleAsc();
+        return runQueryGetList("from Book order by title asc", Book.class, List.of());
+    }
+
+    // == PRIVATE HELPER METHODS ==
+
+    private <S> List<S> runQueryGetList(String sql, Class<S> clazz, List<Object> params) {
+        try (var em = emf.createEntityManager()) {
+            TypedQuery<S> query = em.createQuery(sql, clazz);
+            int i = 1;
+            for (Object param : params) {
+                query.setParameter(i++, param);
+            }
+            return query.getResultList();
+        }
+    }
+
+    private <S> List<S> runQueryGetList(String sql, Class<S> clazz, List<Object> params, Pageable pageable) {
+        try (var em = emf.createEntityManager()) {
+            TypedQuery<S> query = em.createQuery(sql, clazz)
+                    .setMaxResults(pageable.getPageSize())
+                    .setFirstResult(Math.toIntExact(pageable.getOffset()));
+            int i = 1;
+            for (Object param : params) {
+                query.setParameter(i++, param);
+            }
+            return query.getResultList();
+        }
     }
 }

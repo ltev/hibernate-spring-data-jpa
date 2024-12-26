@@ -6,12 +6,10 @@ import com.ltev.bookdb.domain.Book;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public class AuthorDaoHibernate extends AbstractDaoHibernate<Author> implements AuthorDao {
 
     public AuthorDaoHibernate(EntityManagerFactory emf) {
@@ -65,6 +63,7 @@ public class AuthorDaoHibernate extends AbstractDaoHibernate<Author> implements 
     @Override
     public List<Author> findByLastNameSortByFirstName(String lastName, Pageable pageable) {
         try (var em = emf.createEntityManager()) {
+
             Sort.Order order = pageable.getSort().getOrderFor("first_name");
             String sql = new StringBuilder("from Author where lastName = ?1 order by firstName ")
                     .append(order != null ? order.getDirection() : "asc")
