@@ -175,12 +175,15 @@ class AuthorDaoJdbcTemplateImplTest {
     @Sql(   value = {"/db/migration/V3__add_40_Smiths.sql"},
             statements = "insert into author (first_name, last_name) values ('Ugur', 'Jordan');" +
                         "insert into author (first_name, last_name) values ('Vera', 'Jordan');")
-    void findByLastNameSortByFirstName_pageable_noSorting() {
+    void findByLastNameSortByFirstName_pageable_defaultSortByFirstNameAsc() {
         List<Author> page1 = authorDao.findByLastNameSortByFirstName("Smith", PageRequest.of(0, 25));
         List<Author> page2 = authorDao.findByLastNameSortByFirstName("Smith", PageRequest.of(1, 25));
 
         assertThat(page1.size()).isEqualTo(25);
         assertThat(page2.size()).isEqualTo(15);
+        assertThat(page1).isSortedAccordingTo(Comparator.comparing(Author::getFirstName));
+        assertThat(page2).isSortedAccordingTo(Comparator.comparing(Author::getFirstName));
+        assertThat(page1.get(0).getFirstName()).isLessThanOrEqualTo(page2.get(0).getFirstName());
     }
 
     @Test

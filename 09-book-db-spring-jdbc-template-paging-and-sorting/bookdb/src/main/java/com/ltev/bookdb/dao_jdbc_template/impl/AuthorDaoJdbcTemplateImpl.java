@@ -158,21 +158,12 @@ public class AuthorDaoJdbcTemplateImpl extends AbstractDaoJdbcTemplateImpl<Autho
 
     @Override
     public List<Author> findByLastNameSortByFirstName(String lastName, Pageable pageable) {
-        StringBuilder orderBuilder;
-        Sort sort = pageable.getSort();
-        if (sort.isSorted()) {
-            orderBuilder = new StringBuilder(" order by ");
-            sort.get().forEach(o -> orderBuilder.append(o.getProperty()).append(" ").append(o.getDirection()).append(","));
-            orderBuilder.deleteCharAt(orderBuilder.length() - 1);
-        } else {
-            orderBuilder = null;
-        }
-
-        StringBuilder sqlBuilder = new StringBuilder("select * from author where last_name = ?")
-                .append(orderBuilder != null ? orderBuilder.toString() : "")
-                .append(" limit ? offset ?");
-        return jdbcTemplate.query(sqlBuilder.toString(), rowMapper,
-                lastName, pageable.getPageSize(), pageable.getOffset());
+        Sort.Order order = pageable.getSort().getOrderFor("first_name");
+        String sql = new StringBuilder("select * from author where last_name = ? order by first_name ")
+                .append(order != null ? order.getDirection() : "asc")
+                .append(" limit ? offset ?")
+                .toString();
+        return jdbcTemplate.query(sql, rowMapper, lastName, pageable.getPageSize(), pageable.getOffset());
     }
 
     // == PROTECTED ==
