@@ -1,4 +1,4 @@
-package com.ltev.bookdb.dao_jdbc_template.impl;
+package com.ltev.bookdb.dao.jdbc_template_impl;
 
 import com.ltev.bookdb.dao.AuthorDao;
 import com.ltev.bookdb.dao.BookDao;

@@ -1,4 +1,4 @@
-package com.ltev.bookdb.dao.impl;
+package com.ltev.bookdb.dao.jdbc_impl;
 
 import com.ltev.bookdb.dao.BaseDao;
 import com.ltev.bookdb.domain.LongIdEntity;

@@ -1,4 +1,4 @@
-package com.ltev.bookdb.dao_jdbc_template.impl;
+package com.ltev.bookdb.dao.jdbc_template_impl;
 
 import com.ltev.bookdb.domain.Author;
 import com.ltev.bookdb.domain.Book;
@@ -215,22 +215,22 @@ class BookDaoJdbcTemplateImplTest {
         String[] publishers = {"p1", "p2"};
         String[] titles = {"t1", "t2"};
 
-        for (int i = 0; i < 19; i++) {
+        for (int i = 0; i < 25; i++) {
             bookDao.save(new Book(titles[random.nextInt(0, 2)], publishers[random.nextInt(0, 2)], null));
         }
 
         List<Book> found = bookDao.findAll(
-                PageRequest.of(0, 10),
+                PageRequest.of(0, 20),
                 Sort.by(Sort.Order.desc("publisher"), Sort.Order.asc("title"))
         );
 
-        assertThat(found.size()).isEqualTo(10);
+        assertThat(found.size()).isEqualTo(20);
         for (int i = 1; i < found.size(); i++) {
             var b1 = found.get(i - 1);
             var b2 = found.get(i);
             assertThat(b1.getPublisher()).isGreaterThanOrEqualTo(b2.getPublisher());
 
-            if (b1.getPublisher().equals(b2.getPublisher()) == false) {
+            if (b1.getPublisher().equals(b2.getPublisher())) {
                 assertThat(b1.getTitle()).isLessThanOrEqualTo(b2.getTitle());
             }
         }
@@ -273,7 +273,7 @@ class BookDaoJdbcTemplateImplTest {
         for (int i = 1; i < found.size(); i++) {
             var b1 = found.get(i - 1);
             var b2 = found.get(i);
-            assertThat(b1.getTitle().compareTo(b2.getTitle()) <= 1);
+            assertThat(b1.getTitle()).isLessThanOrEqualTo(b2.getTitle());
         }
     }
 }
